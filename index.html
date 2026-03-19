@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oral du Bac</title>
+
+<!-- PWA / Écran d'accueil -->
+<meta name="application-name" content="Oral du Bac">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Oral du Bac">
+<meta name="theme-color" content="#E63946">
+
+<!-- Icône générée en SVG inline encodée en base64 -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23E63946'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='52' text-anchor='middle' fill='white'%3E🎤%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23E63946'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='52' text-anchor='middle' fill='white'%3E🎤%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f5f5f3;font-family:'Inter',sans-serif;color:#0d0d0d;min-height:100vh}
+button{cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
+
+/* ACCUEIL */
+.hero{padding:48px 24px 32px;max-width:700px;margin:0 auto}
+.hero-label{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:12px}
+.hero-title{font-size:42px;font-weight:900;line-height:1.05;color:#0d0d0d;margin-bottom:6px}
+.hero-title span{color:#E63946}
+.hero-sub{font-size:15px;color:#666;margin-bottom:32px;font-weight:400}
+.section-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:14px;padding-left:2px}
+.section-divider{width:32px;height:3px;background:#0d0d0d;margin-bottom:24px}
+
+/* CARTES */
+.cards-grid{display:flex;flex-direction:column;gap:2px;margin-bottom:40px}
+.texte-card{background:#fff;padding:20px 24px;display:flex;align-items:center;gap:18px;cursor:pointer;border:1px solid #e8e8e8;transition:all 0.2s;position:relative;overflow:hidden}
+.texte-card:first-child{border-radius:14px 14px 0 0}
+.texte-card:last-child{border-radius:0 0 14px 14px}
+.texte-card:only-child{border-radius:14px}
+.texte-card:hover{background:#F8F4F4;border-color:#E63946}
+.texte-card:hover .card-num{color:#bbb}
+.texte-card:hover .card-titre{color:#0d0d0d}
+.texte-card:hover .card-meta{color:#888}
+.texte-card:hover .card-arrow{color:#E63946;transform:translateX(4px)}
+.texte-card:hover .card-badge{background:#f0e8e8;color:#E63946}
+.card-num{font-size:11px;font-weight:700;color:#ccc;min-width:28px;font-variant-numeric:tabular-nums;letter-spacing:1px}
+.card-emoji{font-size:24px;width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #eee;background:#fafafa;transition:all 0.2s}
+.texte-card:hover .card-emoji{border-color:#E63946;background:#f0e8e8}
+.card-content{flex:1;min-width:0}
+.card-titre{font-size:16px;font-weight:700;color:#0d0d0d;margin-bottom:3px;transition:color 0.2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{font-size:13px;color:#888;transition:color 0.2s}
+.card-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:#f0f0f0;color:#666;margin-left:8px;transition:all 0.2s}
+.card-arrow{font-size:20px;color:#ccc;transition:all 0.2s;font-weight:300}
+
+/* DÉTAIL */
+.detail-wrap{max-width:700px;margin:0 auto;padding:0 16px 40px}
+.detail-header{padding:32px 0 24px;border-bottom:1px solid #e8e8e8;margin-bottom:24px}
+.back-btn{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;background:none;border:none;margin-bottom:20px;display:flex;align-items:center;gap:6px;padding:0;transition:color 0.15s}
+.back-btn:hover{color:#0d0d0d}
+.detail-num{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:8px}
+.detail-titre{font-size:32px;font-weight:900;line-height:1.1;color:#0d0d0d;margin-bottom:6px}
+.detail-titre span{color:#E63946}
+.detail-auteur{font-size:15px;color:#666;margin-bottom:16px}
+.detail-parcours{display:inline-flex;align-items:center;gap:6px;background:#f0f0f0;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;color:#555}
+
+/* ONGLETS */
+.tabs{display:flex;gap:4px;margin-bottom:28px;background:#f0f0f0;border-radius:10px;padding:4px;overflow-x:auto}
+.tab-btn{border:none;background:none;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:600;color:#888;white-space:nowrap;flex-shrink:0}
+.tab-btn.active{background:#fff;color:#0d0d0d;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+
+/* PROBLÉMATIQUE */
+.pb-bloc{background:#fff;border-radius:12px;border:1px solid #e8e8e8;padding:16px 18px;margin-bottom:20px}
+.pb-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin-bottom:8px}
+.pb-texte{font-size:15px;font-weight:700;color:#0d0d0d;line-height:1.4;margin-bottom:10px}
+.pb-def{font-size:13px;color:#888;font-style:italic;line-height:1.6;border-top:1px solid #f0f0f0;padding-top:10px}
+
+/* MOUVEMENTS */
+.mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
+@media(max-width:500px){.mv-grid{grid-template-columns:1fr}}
+.mv-card{border:1.5px solid #e8e8e8;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff;text-align:left}
+.mv-card.active{border-color:#E63946;background:#F8F4F4}
+.mv-card:hover:not(.active){border-color:#aaa;background:#fafafa}
+.mv-num{font-size:22px;font-weight:900;color:#555;margin-bottom:4px;line-height:1;transition:color 0.2s}
+.mv-card.active .mv-num{color:#555}
+.mv-titre{font-size:13px;font-weight:700;color:#0d0d0d;margin-bottom:6px;line-height:1.3;transition:color 0.2s}
+.mv-card.active .mv-titre{color:#0d0d0d}
+.mv-desc{font-size:12px;color:#888;line-height:1.5;transition:color 0.2s}
+.mv-card.active .mv-desc{color:#666}
+.mv-indicator{width:8px;height:8px;border-radius:50%;margin-bottom:8px;transition:all 0.2s}
+
+/* TEXTE */
+.texte-bloc{background:#fff;border-radius:14px;padding:28px;border:1px solid #e8e8e8;margin-bottom:20px}
+.texte-ligne{display:flex;gap:12px;align-items:baseline;padding:2px 0;transition:opacity 0.2s}
+.ligne-num{font-size:11px;color:#ccc;font-family:monospace;min-width:24px;text-align:right;flex-shrink:0}
+.ligne-num.borne{font-size:12px;font-weight:700;color:#E63946;}
+.ligne-texte{font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.9;color:#0d0d0d;flex:1;border-left:3px solid transparent;padding-left:10px;border-radius:0 4px 4px 0;transition:all 0.2s}
+.texte-notes{margin-top:16px;padding-top:14px;border-top:1px solid #f0f0f0}
+.texte-note{font-size:11px;color:#bbb;margin-bottom:2px}
+
+/* TIMER */
+.timer-bloc{background:#fff;border-radius:14px;padding:24px;border:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.timer-bloc.running{border-color:#0d0d0d;background:#0d0d0d}
+.timer-label{font-size:13px;font-weight:700;color:#0d0d0d;margin-bottom:3px}
+.timer-bloc.running .timer-label{color:#fff}
+.timer-sub{font-size:12px;color:#aaa}
+.timer-display{font-family:monospace;font-size:40px;font-weight:900;color:#0d0d0d;line-height:1}
+.timer-bloc.running .timer-display{color:#fff}
+.timer-display.danger{color:#E63946!important}
+.timer-btns{display:flex;gap:8px;margin-top:10px}
+.t-btn{border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700}
+.t-play{background:#E63946;color:#fff}
+.t-play:hover{background:#c0303c}
+.t-reset{background:#f0f0f0;color:#555}
+.t-reset:hover{background:#e0e0e0}
+.timer-end{margin-top:14px;background:#E63946;color:#fff;border-radius:8px;padding:10px;text-align:center;font-size:13px;font-weight:700;width:100%}
+
+/* TIMER FLOTTANT */
+.float-timer{position:fixed;bottom:24px;right:20px;background:#0d0d0d;border-radius:16px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,0.2);display:flex;align-items:center;gap:14px;z-index:999;transition:all 0.3s;min-width:200px}
+.float-timer.hidden{opacity:0;pointer-events:none;transform:translateY(16px)}
+.float-label{font-size:11px;font-weight:700;color:#aaa;margin-bottom:2px;white-space:nowrap}
+.float-display{font-family:monospace;font-size:28px;font-weight:900;color:#fff;line-height:1}
+.float-display.danger{color:#E63946}
+.float-btns{display:flex;flex-direction:column;gap:6px}
+.float-btn{border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.float-play{background:#E63946;color:#fff}
+.float-reset{background:#2a2a2a;color:#aaa}
+
+
+.auteur-bloc{background:#fff;border-radius:14px;border:1px solid #e8e8e8;overflow:hidden;margin-bottom:16px}
+.auteur-header{background:#0d0d0d;padding:24px;display:flex;gap:16px;align-items:center}
+.auteur-emoji{width:60px;height:60px;border-radius:12px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid #333}
+.auteur-name{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px}
+.auteur-oeuvre{font-size:13px;color:#777}
+.auteur-body{padding:20px}
+.auteur-section{margin-bottom:16px}
+.auteur-section:last-child{margin-bottom:0}
+.auteur-section-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin-bottom:8px}
+.auteur-section-text{font-size:14px;line-height:1.7;color:#444}
+.fiche{background:#f5f5f3;border-radius:14px;padding:20px;border:1px solid #e8e8e8}
+.fiche-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:14px}
+.fiche-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #e8e8e8;font-size:13px}
+.fiche-row:last-child{border-bottom:none}
+.fiche-key{color:#999;min-width:160px;flex-shrink:0;font-weight:600}
+.fiche-val{color:#0d0d0d;font-weight:600}
+
+/* GRAMMAIRE */
+.gram-alert{background:#fffbea;border:1.5px solid #f0c040;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#7a5f00;line-height:1.6}
+.gram-card{background:#fff;border-radius:14px;border:1px solid #e8e8e8;padding:20px;margin-bottom:12px}
+.gram-qnum{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin-bottom:10px}
+.gram-q{background:#f5f5f3;border-radius:8px;padding:14px;margin-bottom:12px;font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.6;color:#0d0d0d;font-style:italic}
+.gram-btn{border:2px solid #0d0d0d;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;background:#fff;color:#0d0d0d;width:100%}
+.gram-btn:hover{background:#0d0d0d;color:#fff}
+.gram-rep{margin-top:12px;background:#f0f9f4;border-radius:8px;padding:14px;font-size:14px;line-height:1.7;color:#0d0d0d;border-left:3px solid #2D6A4F}
+
+/* ENTRETIEN */
+.ent-alert{background:#e8f4fd;border:1.5px solid #90caf9;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#1565c0;line-height:1.6}
+.ent-card{background:#fff;border-radius:14px;border:1.5px solid #e8e8e8;padding:20px;margin-bottom:10px;cursor:pointer;transition:all 0.2s}
+.ent-card:hover{border-color:#aaa}
+.ent-card.open{border-color:#0d0d0d}
+.ent-row{display:flex;gap:12px;align-items:flex-start}
+.ent-num{background:#0d0d0d;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ent-q{font-size:14px;line-height:1.6;color:#0d0d0d;flex:1;font-family:'Lora',Georgia,serif}
+.ent-hint{margin-top:12px;background:#f5f5f3;border-radius:8px;padding:12px;font-size:13px;color:#666}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ─── DONNÉES ───────────────────────────────────────────────
+const TX=[
+{id:1,num:"01",titre:"Le Dormeur du val",auteur:"Arthur Rimbaud",annee:"1870",oeuvre:"Cahiers de Douai",
+entree:"Poésie XIXe-XXIe",parcours:"Émancipations créatrices",statut:"Œuvre",em:"🌿",cl:"#2D6A4F",
+pb:"Comment ce poème dénonce-t-il les atrocités de la guerre de façon originale ?",
+bio:"Arthur Rimbaud (1854-1891) est un poète français né à Charleville. Il écrit ses premiers poèmes à 15 ans et renonce à l'écriture à 20 ans pour mener une vie aventureuse en Afrique.",
+ctx:"Les Cahiers de Douai (1870) rassemblent 22 poèmes écrits alors que Rimbaud n'a que 16 ans. Ce recueil s'inscrit dans le mouvement romantique tardif mais annonce déjà le symbolisme.",
+mv:[
+{a:1,b:4,t:"Un cadre idyllique",c:"#74C69D",desc:"Le poète installe un paysage naturel lumineux et vivant. De nombreuses personnifications (la rivière « chante », le soleil « luit ») donnent un aspect extrêmement vivant à la nature. Le cadre bucolique crée une atmosphère apaisante et accueillante qui contraste avec la révélation finale."},
+{a:5,b:8,t:"L'apparition du jeune soldat",c:"#52B788",desc:"La jeunesse et la vulnérabilité du soldat sont mises en valeur. La postposition de l'adjectif « jeune » le rend particulièrement audible. La nature semble bienveillante et maternelle envers lui — le « lit vert » suggère un couchage agréable. Des indices discrets troublent pourtant l'atmosphère idyllique."},
+{a:9,b:11,t:"Le soldat endormi",c:"#40916C",desc:"Le poète insiste sur le sommeil du soldat pour préparer la chute. La comparaison « souriant comme sourirait un enfant malade » est inquiétante. Des indices de mort apparaissent : les glaïeuls (fleurs associées au deuil), « il a froid » en clausule. L'ambiguïté entre sommeil et mort est savamment entretenue."},
+{a:12,b:14,t:"La révélation finale",c:"#1B4332",desc:"La chute brutale résout l'ambiguïté en un seul vers. « Les parfums ne font pas frissonner sa narine » — la négation donne un ton catégorique. Le dernier vers est formulé comme un simple constat, dénué de tout pathos, ce qui renforce le choc. Le lecteur est invité à relire le poème en sachant que le soldat est mort."}
+],
+vs:[{n:1,t:"C'est un trou de verdure où chante une rivière"},{n:2,t:"Accrochant follement aux herbes des haillons"},{n:3,t:"D'argent ; où le soleil, de la montagne fière,"},{n:4,t:"Luit : c'est un petit val qui mousse de rayons."},{n:5,t:"Un soldat jeune, bouche ouverte, tête nue,"},{n:6,t:"Et la nuque baignant dans le frais cresson¹ bleu,"},{n:7,t:"Dort ; il est étendu dans l'herbe, sous la nue²,"},{n:8,t:"Pâle dans son lit vert où la lumière pleut."},{n:9,t:"Les pieds dans les glaïeuls³, il dort. Souriant comme"},{n:10,t:"Sourirait un enfant malade, il fait un somme⁴ :"},{n:11,t:"Nature, berce-le chaudement : il a froid."},{n:12,t:"Les parfums ne font pas frissonner sa narine ;"},{n:13,t:"Il dort dans le soleil, la main sur sa poitrine"},{n:14,t:"Tranquille. Il a deux trous rouges au côté droit."}],
+nt:["¹ Plante des lieux humides","² Ciel","³ Fleurs en épi associées au deuil","⁴ Sieste"],
+gr:[{q:"Analysez la négation dans : « Les parfums ne font pas frissonner sa narine »",r:"Négation totale <em>ne…pas</em> encadrant le verbe « font ». Elle donne un ton catégorique et rompt avec l'atmosphère douce du début — les sens ne réagissent plus, indice discret de la mort."},
+{q:"Identifiez la subordonnée dans : « Souriant comme sourirait un enfant malade »",r:"Subordonnée comparative introduite par <em>comme</em>. Le conditionnel « sourirait » exprime l'irréel ; la comparaison renforce la vulnérabilité du soldat et prépare la révélation finale."}],
+en:["Comment ce poème dénonce-t-il les atrocités de la guerre de façon originale ?","Quel est l'effet de la chute sur le lecteur ? Pourquoi révéler la mort à la fin ?","En quoi ce poème est-il représentatif du parcours « émancipations créatrices » ?","Comparez ce poème à « Le Mal » de Rimbaud — quelle différence dans la dénonciation de la guerre ?"]},
+
+{id:2,num:"02",titre:"Au Cabaret-Vert",auteur:"Arthur Rimbaud",annee:"1870",oeuvre:"Cahiers de Douai",
+entree:"Poésie XIXe-XXIe",parcours:"Émancipations créatrices",statut:"Œuvre",em:"🍺",cl:"#2D6A4F",
+pb:"Comment ce sonnet décrit-il le bonheur de façon audacieuse ?",
+bio:"Arthur Rimbaud (1854-1891) est un poète français né à Charleville. Il écrit ses premiers poèmes à 15 ans et renonce à l'écriture à 20 ans pour une vie aventureuse en Afrique.",
+ctx:"Les Cahiers de Douai (1870) rassemblent 22 poèmes de Rimbaud adolescent. « Au Cabaret-Vert » évoque une fugue à Charleroi avec une énergie vitale et une audace formelle qui brise les règles classiques.",
+mv:[
+{a:1,b:4,t:"L'arrivée au Cabaret-Vert",c:"#74C69D",desc:"Le poète évoque la rudesse du voyage (bottines déchirées, cailloux). Cet enjambement dès le vers 1 traduit le déplacement spatial. L'arrivée au cabaret est théâtralisée : le nom est encadré par un tiret et deux points. L'assurance du jeune garçon est perceptible dans la formulation directe de sa commande."},
+{a:5,b:14,t:"Le repas et le portrait de la serveuse",c:"#40916C",desc:"Le bien-être de Rimbaud est souligné par l'adjectif « bienheureux » en tête de vers. La description du repas sollicite massivement tous les sens (toucher, vue, odorat, goût). Le portrait de la serveuse révèle le caractère adolescent du narrateur. La versification audacieuse (alexandrins dissymétriques, rejets) reflète la liberté du poète."}
+],
+vs:[{n:1,t:"Depuis huit jours, j'avais déchiré mes bottines"},{n:2,t:"Aux cailloux des chemins. J'entrais à Charleroi¹."},{n:3,t:"– Au Cabaret-Vert : je demandai des tartines"},{n:4,t:"De beurre et du jambon qui fût à moitié froid."},{n:5,t:"Bienheureux, j'allongeai les jambes sous la table"},{n:6,t:"Verte : je contemplai les sujets très naïfs"},{n:7,t:"De la tapisserie. – Et ce fut adorable,"},{n:8,t:"Quand la fille aux tétons énormes, aux yeux vifs,"},{n:9,t:"– Celle-là, ce n'est pas un baiser qui l'épeure² ! –"},{n:10,t:"Rieuse, m'apporta des tartines de beurre,"},{n:11,t:"Du jambon tiède, dans un plat colorié,"},{n:12,t:"Du jambon rose et blanc parfumé d'une gousse"},{n:13,t:"D'ail, – et m'emplit la chope immense, avec sa mousse"},{n:14,t:"Que dorait un rayon de soleil arrière³."}],
+nt:["¹ Ville de Belgique","² Qui lui fait peur","³ De fin de journée"],
+gr:[{q:"Analysez la négation dans : « ce n'est pas un baiser qui l'épeure »",r:"Négation totale <em>ne…pas</em> à valeur exclamative et affirmative ironique. En niant l'effarouchement, Rimbaud affirme l'audace de la serveuse — la négation sert l'emphase."},
+{q:"Identifiez la subordonnée relative dans : « un rayon de soleil qui dorait la mousse »",r:"Subordonnée relative introduite par <em>qui</em>, pronom relatif sujet, antécédent : « rayon de soleil ». Elle clôt le poème sur une image lumineuse et sensuelle."}],
+en:["Comment ce sonnet décrit-il le bonheur de façon audacieuse ?","En quoi la forme poétique est-elle détournée par Rimbaud ?","Quel rôle joue la nourriture dans ce poème ? En quoi est-ce une émancipation ?","Comparez ce poème à « Ma Bohème » — quelle vision de la liberté exprime Rimbaud ?"]},
+
+{id:3,num:"03",titre:"Ma Bohème (Fantaisie)",auteur:"Arthur Rimbaud",annee:"1870",oeuvre:"Cahiers de Douai",
+entree:"Poésie XIXe-XXIe",parcours:"Émancipations créatrices",statut:"Œuvre",em:"⭐",cl:"#2D6A4F",
+pb:"Comment l'écriture poétique de Rimbaud reflète-t-elle une quête de liberté ?",
+bio:"Arthur Rimbaud (1854-1891) est un poète français né à Charleville. Il écrit ses premiers poèmes à 15 ans et renonce à l'écriture à 20 ans pour une vie aventureuse en Afrique.",
+ctx:"Dernier poème des Cahiers de Douai, « Ma Bohème » est un sonnet autobiographique qui fait l'éloge de l'errance et de la liberté tout en parodiant la poésie romantique traditionnelle.",
+mv:[
+{a:1,b:4,t:"Un poète vagabond",c:"#74C69D",desc:"Rimbaud présente son errance sans destination précise. La pauvreté n'est pas source de malheur — le manteau déchiré devient « idéal », antiphrase ironique. Le poète s'affranchit symboliquement des codes d'une société bourgeoise. Les interjections monosyllabiques du vers 4 témoignent de l'enthousiasme et de l'ironie du poète."},
+{a:5,b:8,t:"Un « Petit-Poucet rêveur »",c:"#52B788",desc:"Le poète s'identifie à la figure du Petit-Poucet, mais au lieu de semer des cailloux, il sème des rimes. Le vagabondage prend une dimension cosmique : son auberge est à la Grande-Ourse. L'onomatopée « frou-frou » est délibérément enfantine et naïve — Rimbaud se moque des règles de la poésie romantique."},
+{a:9,b:11,t:"La communion avec la nature",c:"#40916C",desc:"Le poète écoute les étoiles et trouve dans la rosée une nourriture spirituelle. La nature, bienveillante et protectrice, joue un rôle central dans sa quête du bonheur. La rosée comparée à « un vin de vigueur » crée une synesthésie — la nature devient une source d'ivresse et de vie pour le poète fugueur."},
+{a:12,b:14,t:"Le bonheur de la création poétique",c:"#1B4332",desc:"Rimbaud tourne en dérision ses propres émois poétiques. Les souliers se transforment en lyres et leurs lacets en cordes. La rime insolite « fantastiques/élastiques » est une parodie du lyrisme traditionnel. Le dernier hémistiche est énigmatique : le double sens du mot « pied » (chaussure et mesure du vers latin) crée une image originale."}
+],
+vs:[{n:1,t:"Je m'en allais, les poings dans mes poches crevées ;"},{n:2,t:"Mon paletot¹ aussi devenait idéal :"},{n:3,t:"J'allais sous le ciel, Muse ! et j'étais ton féal² ;"},{n:4,t:"Oh ! là ! là ! que d'amours splendides j'ai rêvées !"},{n:5,t:"Mon unique culotte³ avait un large trou."},{n:6,t:"– Petit-Poucet rêveur, j'égrenais dans ma course"},{n:7,t:"Des rimes. Mon auberge était à la Grande-Ourse."},{n:8,t:"– Mes étoiles au ciel avaient un doux frou-frou"},{n:9,t:"Et je les écoutais, assis au bord des routes,"},{n:10,t:"Ces bons soirs de septembre où je sentais des gouttes"},{n:11,t:"De rosée à mon front, comme un vin de vigueur ;"},{n:12,t:"Où, rimant au milieu des ombres fantastiques,"},{n:13,t:"Comme des lyres, je tirais les élastiques"},{n:14,t:"De mes souliers blessés, un pied près de mon cœur !"}],
+nt:["¹ Veste, manteau","² Fidèle, serviteur","³ Ici, pantalon"],
+gr:[{q:"Analysez la subordonnée dans : « Ces bons soirs de septembre où je sentais des gouttes »",r:"Subordonnée relative introduite par <em>où</em> (pronom relatif de temps), antécédent : « soirs ». Elle précise le cadre temporel et crée une atmosphère sensorielle nostalgique."},
+{q:"Analysez : « comme un vin de vigueur »",r:"Proposition comparative introduite par <em>comme</em>. Synesthésie (toucher/goût) — la rosée sur le front du poète est comparée à une boisson énergisante, la nature devient source de vie."}],
+en:["Comment l'écriture poétique de Rimbaud reflète-t-elle une quête de liberté ?","En quoi ce poème parodie-t-il la poésie romantique ?","Quelle est la place de la nature dans ce poème ?","En quoi le vagabondage est-il une forme d'émancipation ?"]},
+
+{id:4,num:"04",titre:"Vieille chanson du jeune temps",auteur:"Victor Hugo",annee:"1856",oeuvre:"Les Contemplations",
+entree:"Poésie XIXe-XXIe",parcours:"Émancipations créatrices",statut:"Parcours",em:"🌹",cl:"#6B4226",
+pb:"Comment ce poème évoque-t-il l'éveil du sentiment amoureux ?",
+bio:"Victor Hugo (1802-1885) est une figure majeure du romantisme français. Après la mort de sa fille Léopoldine et son exil suite au coup d'État de Napoléon III, il compose Les Contemplations.",
+ctx:"Les Contemplations (1856) est un recueil de 158 poèmes répartis en six livres. « Vieille chanson du jeune temps » s'inscrit dans la partie « Autrefois » et évoque avec ironie et nostalgie un souvenir amoureux de jeunesse.",
+mv:[
+{a:1,b:12,t:"Une promenade bucolique et complice",c:"#C9A87C",desc:"Le poète installe un cadre naturel paisible et champêtre, propice à la confidence et à la complicité. La marche dans les bois crée un climat intime. L'antithèse « vieille/jeune » du titre annonce le décalage entre le poète jeune et le poète âgé. Les tournures négatives (« Je ne songeais pas ») placent la rencontre sous le signe du manque annoncé."},
+{a:13,b:28,t:"Une invitation discrète à l'amour",c:"#A0785A",desc:"Rose adresse au poète des paroles pleines de sous-entendus amoureux. Elle lui tend des perches qu'il ne saisit pas, illustrant son innocence ou sa maladresse. Les oiseaux semblent témoins de cet idylle manqué — les rossignols célèbrent Rose tandis que les merles se moquent du jeune homme. La description devient plus physique et érotique."},
+{a:29,b:36,t:"Le regret d'une occasion manquée",c:"#6B4226",desc:"Le poète, devenu adulte, repense à cette scène avec mélancolie et ironie. Il exprime son regret d'avoir laissé passer cette chance d'amour, mêlant autodérision et nostalgie. L'imparfait renforcé par les adverbes « parfois » et « quelquefois » montre que cette promenade fut longue et fastidieuse. La dernière parole de Rose clôt ironiquement le poème."}
+],
+vs:[{n:1,t:"Je ne songeais pas à Rose ;"},{n:2,t:"Rose au bois vint avec moi ;"},{n:3,t:"Nous parlions de quelque chose,"},{n:4,t:"Mais je ne sais plus de quoi."},{n:5,t:"J'étais froid comme les marbres ;"},{n:6,t:"Je marchais à pas distraits ;"},{n:7,t:"Je parlais des fleurs, des arbres"},{n:8,t:"Son œil semblait dire : « Après ? »"},{n:9,t:"La rosée offrait ses perles,"},{n:10,t:"Le taillis ses parasols ;"},{n:11,t:"J'allais ; j'écoutais les merles,"},{n:12,t:"Et Rose les rossignols."},{n:13,t:"Moi, seize ans, et l'air morose ;"},{n:14,t:"Elle, vingt ; ses yeux brillaient."},{n:15,t:"Les rossignols chantaient Rose"},{n:16,t:"Et les merles me sifflaient."},{n:17,t:"Rose, droite sur ses hanches,"},{n:18,t:"Leva son beau bras tremblant"},{n:19,t:"Pour prendre une mûre aux branches"},{n:20,t:"Je ne vis pas son bras blanc."},{n:21,t:"Une eau courait, fraîche et creuse,"},{n:22,t:"Sur les mousses de velours ;"},{n:23,t:"Et la nature amoureuse"},{n:24,t:"Dormait dans les grands bois sourds."},{n:25,t:"Rose défit sa chaussure,"},{n:26,t:"Et mit, d'un air ingénu,"},{n:27,t:"Son petit pied dans l'eau pure"},{n:28,t:"Je ne vis pas son pied nu."},{n:29,t:"Je ne savais que lui dire ;"},{n:30,t:"Je la suivais dans le bois,"},{n:31,t:"La voyant parfois sourire"},{n:32,t:"Et soupirer quelquefois."},{n:33,t:"Je ne vis qu'elle était belle"},{n:34,t:"Qu'en sortant des grands bois sourds."},{n:35,t:"« Soit ; n'y pensons plus ! » dit-elle."},{n:36,t:"Depuis, j'y pense toujours."}],
+nt:[],
+gr:[{q:"Analysez la négation dans : « Je ne songeais pas à Rose »",r:"Négation totale <em>ne…pas</em> encadrant « songeais » (imparfait). Ironie immédiate : toute la strophe contredit cette affirmation — le poète dit qu'il ne pensait pas à Rose mais c'est elle dont il nous parle."},
+{q:"Identifiez les subordonnées dans : « Je ne vis qu'elle était belle / Qu'en sortant des grands bois sourds »",r:"Deux subordonnées : complétive (« qu'elle était belle ») et circonstancielle de temps (« qu'en sortant »). Double aveuglement — il n'a rien compris sur le moment."}],
+en:["Comment ce poème évoque-t-il l'éveil du sentiment amoureux ?","Quelle est la fonction de l'ironie dans ce poème ?","En quoi le décalage entre les deux personnages est-il le ressort principal ?","Pourquoi ce texte du parcours illustre-t-il le thème des « émancipations créatrices » ?"]},
+
+{id:5,num:"05",titre:"Manon Lescaut — La rencontre",auteur:"Abbé Prévost",annee:"1731",oeuvre:"Manon Lescaut",
+entree:"Roman et récit du Moyen Âge au XXIe s.",parcours:"Personnages en marge, plaisirs du romanesque",statut:"Œuvre",em:"📖",cl:"#7B2D8B",
+pb:"Comment cette scène de rencontre amoureuse annonce-t-elle la chute des protagonistes ?",
+bio:"Antoine François Prévost (1697-1763) mena une vie aventureuse entre l'armée et les noviciats. Criblé de dettes, il mourut en 1763. Sa vie rocambolesque nourrit directement son œuvre.",
+ctx:"Manon Lescaut (1731) est une œuvre majeure du XVIIIe siècle, mouvement du retour de la sensibilité après le rationalisme des Lumières. Le roman dépeint la passion dévastatrice du chevalier Des Grieux pour Manon, personnage en marge de la société.",
+mv:[
+{a:1,b:5,t:"Le récit rétrospectif de la rencontre",c:"#C77DFF",desc:"Le narrateur intervient en commentant ses actions passées en focalisation interne. L'interjection « Hélas ! » témoigne de son jugement rétrospectif marqué par le regret. Le conditionnel passé (« j'aurais porté ») traduit l'irréel du passé, soulignant les conséquences irréversibles. Le récit débute véritablement avec le passé simple, posant un cadre spatio-temporel précis."},
+{a:5,b:12,t:"La fascination de Des Grieux",c:"#9D4EDD",desc:"La jeune fille se distingue des autres femmes par son immobilité (elle « s'arrêta »). Les antithèses « quelques/une » et « se retirèrent/s'arrêta » soulignent sa singularité. Des Grieux préfère des adjectifs peu précis renforcés par des adverbes d'intensité : « fort jeune », « si charmante ». Les termes « enflammé » et « transport » appartiennent au lexique de la tragédie."},
+{a:12,b:22,t:"Les premières paroles échangées",c:"#7B2D8B",desc:"Les paroles échangées sont rapportées selon trois manières : discours indirect, narrativisé et indirect libre. Des informations sur Manon dessinent l'image d'une jeune femme expérimentée en amour. La proposition circonstancielle de concession (« Quoiqu'elle fût encore moins âgée ») met en place un paradoxe. La fatalité est en marche : Manon est envoyée contre sa volonté au couvent."}
+],
+vs:[{n:1,t:"J'avais marqué le temps de mon départ d'Amiens. Hélas ! que ne le marquais-je un"},{n:2,t:"jour plus tôt ! j'aurais porté chez mon père toute mon innocence. La veille même de celui"},{n:3,t:"que je devais quitter cette ville, étant à me promener avec mon ami, qui s'appelait"},{n:4,t:"Tiberge, nous vîmes arriver le coche¹ d'Arras, et nous le suivîmes jusqu'à l'hôtellerie où"},{n:5,t:"ces voitures descendent. Nous n'avions pas d'autre motif que la curiosité. Il en sortit"},{n:6,t:"quelques femmes, qui se retirèrent aussitôt. Mais il en resta une, fort jeune², qui s'arrêta"},{n:7,t:"seule dans la cour, pendant qu'un homme d'un âge avancé, qui paraissait lui servir de"},{n:8,t:"conducteur, s'empressait pour faire tirer son équipage³ des paniers. Elle me parut si"},{n:9,t:"charmante que moi, qui n'avais jamais pensé à la différence des sexes, ni regardé une fille"},{n:10,t:"avec un peu d'attention, moi, dis-je, dont tout le monde admirait la sagesse et la retenue,"},{n:11,t:"je me trouvai enflammé tout d'un coup jusqu'au transport⁴ ; j'avais le défaut d'être"},{n:12,t:"excessivement timide et facile à déconcerter ; mais loin d'être arrêté par cette"},{n:13,t:"faiblesse, je m'avançai vers la maîtresse de mon cœur. Quoiqu'elle fût encore moins âgée"},{n:14,t:"que moi, elle reçut mes politesses sans paraître embarrassée. Je lui demandai ce qui"},{n:15,t:"l'amenait à Amiens et si elle y avait quelques personnes de connaissance. Elle me"},{n:16,t:"répondit ingénument⁵ qu'elle y était envoyée par ses parents pour être religieuse."},{n:17,t:"L'amour me rendait déjà si éclairé, depuis un moment qu'il était dans mon cœur, que je"},{n:18,t:"regardai ce dessein comme un coup mortel pour mes désirs. Je lui parlai d'une manière"},{n:19,t:"qui lui fit comprendre mes sentiments, car elle était bien plus expérimentée que moi."},{n:20,t:"C'était malgré elle qu'on l'envoyait au couvent, pour arrêter sans doute son penchant au"},{n:21,t:"plaisir, qui s'était déjà déclaré et qui a causé, dans la suite, tous ses malheurs et les"},{n:22,t:"miens."}],
+nt:["¹ Grande voiture tirée par des chevaux","² Manon a 15 ou 16 ans","³ Bagages","⁴ Exaltation de la passion","⁵ Avec franchise"],
+gr:[{q:"Analysez la subordonnée dans : « si elle y avait quelques personnes de connaissance »",r:"Subordonnée interrogative indirecte introduite par <em>si</em>, dépendant de « demandai ». Elle transmet la question de Des Grieux de façon indirecte et donne un effet de rapidité à l'échange."},
+{q:"Identifiez la négation dans : « qui n'avais jamais pensé à la différence des sexes, ni regardé une fille »",r:"Négation totale <em>ne…jamais</em> renforcée par la coordination négative <em>ni</em>. Double négation qui insiste sur l'innocence de Des Grieux avant la rencontre — contraste fort avec son embrasement soudain."}],
+en:["Comment cette scène de rencontre annonce-t-elle la chute des protagonistes ?","En quoi Des Grieux est-il un personnage en marge de la société de son époque ?","Quel rôle joue le narrateur rétrospectif dans ce passage ?","Comparez cette rencontre à d'autres scènes célèbres de la littérature française."]},
+
+{id:6,num:"06",titre:"La Peau de l'ours",auteur:"Joy Sorman",annee:"2014",oeuvre:"La Peau de l'ours",
+entree:"Roman et récit du Moyen Âge au XXIe s.",parcours:"Personnages en marge, plaisirs du romanesque",statut:"Parcours",em:"🐻",cl:"#C25E1A",
+pb:"Comment Joy Sorman dénonce-t-elle la condition animale ?",
+bio:"Joy Sorman (née en 1973) est une écrivaine contemporaine qui s'intéresse aux questions de société et aux marges. Elle aborde dans ses romans la justice, la folie et le monde animal.",
+ctx:"Dans La Peau de l'ours (2014), Joy Sorman donne la parole à une créature mi-homme mi-ours pour questionner notre rapport aux animaux et à la différence. Après avoir été exploité dans un cirque, le narrateur est placé dans un zoo.",
+mv:[
+{a:1,b:10,t:"L'ours, élément d'une collection scientifique",c:"#F4A261",desc:"Dès le début, le narrateur prend conscience de son statut d'objet classé dans une collection. L'expression « je fais désormais partie d'une collection de bêtes » réduit l'animal à l'état d'exemplaire. Suit une longue énumération de 11 lignes évoquant une encyclopédie vivante — accumulation foisonnante qui traduit à la fois la richesse de la nature et sa réduction artificielle dans un cadre limité."},
+{a:11,b:17,t:"Le témoignage d'une créature emprisonnée",c:"#E76F51",desc:"Le narrateur décrit les animaux du zoo comme une « communauté de déplacés », une « colonie de rescapés » — termes qui rappellent les persécutions humaines. L'humain est décrit de manière péjorative : « bipèdes sans défense », « indigente espèce ». Des images de claustration expriment la souffrance : « animal sous cloche », « expatrié », « banni ». Le ciel est devenu inaccessible, symbole de liberté perdue."},
+{a:18,b:22,t:"La dénonciation — l'animal réduit à un objet",c:"#C25E1A",desc:"L'utilisation du futur (« se révélera », « je me découvrirai ») renforce l'enfermement dans un destin non choisi. La répétition de « on » dans « on viendra m'admirer », « on m'étudiera », « on me préservera » insiste sur l'anonymat de cette exploitation. Le dernier mot, « docilité », clôt l'extrait sur une note amère : malgré le changement de contexte, le sort de l'animal reste identique."}
+],
+vs:[{n:1,t:"Je fais désormais partie d'une collection de bêtes, je suis l'ours, un des chapitres de"},{n:2,t:"cette encyclopédie qui réunit tous les animaux — ceux qui volent, sautent, rampent,"},{n:3,t:"courent, nagent, bondissent, plongent, aux trompes, aux cornes, aux carapaces, aux"},{n:4,t:"venimeux, ceux aux nageoires, aux piquants, aux queues, aux crins, aux museaux allongés, courts,"},{n:5,t:"ronds, doux aux cornes, aux carapaces, aux duvets, aux becs, ceux qui chargent, griffent,"},{n:6,t:"lèchent, mordent, ceux aux robes, aux écailles, aux plumes, aux cuirs, aux"},{n:7,t:"pelages noirs, bruns, améthyste, ocre, roses, grenat, tachetés, mouchetés, zébrés, les"},{n:8,t:"minuscules et les monstrueux, quelques grammes et plusieurs tonnes, échantillonnage de"},{n:9,t:"toutes les formes, toutes les matières et toutes les nuances, comme si tous les paysages"},{n:10,t:"peuplés de toutes les bêtes tenaient désormais dans le creux d'une main, la main d'un"},{n:11,t:"démiurge. J'ai rejoint cette communauté de déplacés, une colonie de rescapés"},{n:12,t:"de l'appétit de ces bipèdes sans défense que sont les hommes, indigente espèce aux"},{n:13,t:"variations éteintes, aux capacités rabotées, aux teintes fanées."},{n:14,t:"Au fond de cette fosse, je sens la colère grandir, le ciel est si loin au-dessus de ma"},{n:15,t:"tête, inatteignable et perdu, je suis un animal sous cloche, visible mais expatrié, banni"},{n:16,t:"mais sous le regard de tous, il va falloir s'y faire, je m'y ferai, les animaux se font à"},{n:17,t:"presque tout, ils s'acclimatent et se modifient ou bien ils meurent."},{n:18,t:"Voilà donc ma nouvelle terre, je me découvrirai tout autre, je me découvrirai pièce de musée, objet"},{n:19,t:"pédagogique et scientifique, de divertissement et de conservation, chaque jour on"},{n:20,t:"viendra m'admirer et m'étudier, on me préservera, de ma propre existence sans doute. Ici"},{n:21,t:"on ne me demandera jamais de travailler mais de m'exposer – de bête de cirque je suis"},{n:22,t:"devenu animal de zoo, avec la même docilité."}],
+nt:[],
+gr:[{q:"Analysez la négation dans : « on ne me demandera jamais de travailler mais de m'exposer »",r:"Négation totale <em>ne…jamais</em> renforcée par la coordination <em>mais</em> qui introduit l'alternative. La négation souligne l'enfermement passif — l'animal n'agit plus, il est agi."},
+{q:"Analysez la subordonnée dans : « comme si tous les paysages tenaient dans le creux d'une main »",r:"Subordonnée comparative introduite par <em>comme si</em>, exprimant l'irréel (subjonctif). Elle dénonce la réduction de la nature infinie à l'espace limité du zoo."}],
+en:["Comment Joy Sorman dénonce-t-elle la condition animale dans cet extrait ?","En quoi le narrateur est-il un « personnage en marge » au sens du parcours ?","Quel effet produit le choix d'un narrateur mi-homme mi-ours ?","Comparez la marginalité de ce personnage à celle de Vernon Subutex."]},
+
+{id:7,num:"07",titre:"Vernon Subutex",auteur:"Virginie Despentes",annee:"2015",oeuvre:"Vernon Subutex",
+entree:"Roman et récit du Moyen Âge au XXIe s.",parcours:"Personnages en marge, plaisirs du romanesque",statut:"Parcours",em:"🏙️",cl:"#1A3C5C",
+pb:"Comment l'itinéraire de ce personnage en marge permet-il de déployer une réflexion sur la société contemporaine ?",
+bio:"Virginie Despentes (née en 1969) est une écrivaine française dont les romans dérangent par leur style direct et leurs sujets de société. Elle est devenue une figure majeure de la littérature contemporaine.",
+ctx:"Vernon Subutex (2015) est le premier tome d'une trilogie racontant le parcours d'un ancien disquaire parisien devenu SDF, suite à la dématérialisation des disques. Ce roman dresse un portrait critique de la société contemporaine et de ses exclus.",
+mv:[
+{a:1,b:8,t:"Vernon et la ville",c:"#5BA4CF",desc:"L'extrait s'ouvre sur l'idée que le personnage se caractérise par le manque d'argent. L'autrice dit implicitement qu'il y a deux façons de vivre en ville, avec ou sans argent. L'énumération des lieux (« Salles de ciné, magasins de fringues, brasseries, musées ») insiste sur la longue liste des endroits désormais inaccessibles. Les toponymes parisiens créent un effet de réel ancrant l'histoire dans la réalité."},
+{a:9,b:16,t:"Vernon et les femmes",c:"#2E86AB",desc:"Vernon tente de « garder le moral » en regardant les filles. S'ensuit une comparaison entre les modes vestimentaires passés et ceux d'aujourd'hui. L'opposition entre l'imparfait (« sortaient ») et le présent (« portent ») sépare ce que Vernon a connu dans le passé de ce qu'il voit aujourd'hui. Ce constat légèrement cruel dénonce une société focalisée sur les apparences."},
+{a:17,b:25,t:"La rencontre avec une passante",c:"#1A3C5C",desc:"Vernon s'assoit à côté d'une quadragénaire qui ressemble vaguement à Jean-Jacques Goldman. Elle affiche ostensiblement son indifférence. Un dialogue s'ouvre entre eux, entièrement constitué de phrases interrogatives qui révèlent l'incompréhension profonde de ces deux inconnus qui ne semblent pas appartenir au même monde. Le passage se termine par une marque de mépris de la quadragénaire."}
+],
+vs:[{n:1,t:"La ville sans argent. Vernon la pratique depuis un moment. Salles de ciné,"},{n:2,t:"magasins de fringues, brasseries, musées — il y a peu d'endroits où l'on puisse s'asseoir au"},{n:3,t:"chaud sans rien payer. Restent les gares, le métro, les bibliothèques et les églises, et"},{n:4,t:"quelques bancs qui n'ont pas été arrachés pour éviter que les gens comme lui s'assoient"},{n:5,t:"gratuitement trop longtemps. Les gares et les églises ne sont pas chauffées, l'idée de"},{n:6,t:"frauder le métro avec sa valise le démoralise. Il remonte l'avenue des Gobelins, vers la"},{n:7,t:"place d'Italie. Il a de la chance, un soleil franc éclaire les rues, alors qu'il a plu tous ces"},{n:8,t:"derniers jours. Il essaye de garder le moral en regardant les filles, dans la rue. De son temps, au"},{n:9,t:"premier rayon de soleil les filles sortaient ce qu'elles avaient de plus court, pour fêter"},{n:10,t:"l'événement. Aujourd'hui, il voit beaucoup de dames qui ont passé la quarantaine et qui font"},{n:11,t:"les gamines, les gamines sont toujours aussi belles mais elles s'arrangent moins bien."},{n:12,t:"Les fringues bien coupées. Mais une fois qu'elles les portent on ne voit plus que leur âge. Et"},{n:13,t:"séduites sur les portants, des choses pas chères et qui paraissaient d'honnêtes copies de"},{n:14,t:"comme elles peuvent, avec des vêtements achetés pendant les soldes et qui les ont"},{n:15,t:"en tête d'aller jusqu'au parc, mais son sac est trop lourd. Il s'assoit à côté d'une quadra"},{n:16,t:"volumineux, en toile, rempli de nourriture baba cool. Tout dans son attitude respire"},{n:17,t:"qui ressemble vaguement à Jean-Jacques Goldman. Elle a posé entre ses pieds un cabas"},{n:18,t:"l'intelligence, l'aisance, le sérieux et la prétention. La femme évite ostensiblement son"},{n:19,t:"regard, mais le premier bus qui passe n'est pas le sien. Elle sort une cigarette de la poche"},{n:20,t:"de sa veste, il essaye d'engager la conversation, il sait qu'elle va le prendre pour un lourd,"},{n:21,t:"mais il a besoin d'échanger quelques mots avec quelqu'un."},{n:22,t:"« Ce n'est pas contradictoire - je veux dire manger bio et fumer des cigarettes ?"},{n:23,t:"– Oui, mais en même temps, je fais ce que je veux, non ?"},{n:24,t:"– Et vous voudriez m'en donner une, de cigarette ? »"},{n:25,t:"Elle tourne la tête en soupirant, comme si ça faisait trois heures qu'il la harcelait."}],
+nt:[],
+gr:[{q:"Analysez l'interrogation dans : « Ce n'est pas contradictoire... manger bio et fumer des cigarettes ? »",r:"Interrogation directe totale (point d'interrogation). Structure particulière : affirmation négative + reformulation, créant un effet de maladresse sociale caractéristique du personnage exclu."},
+{q:"Identifiez la négation dans : « il y a peu d'endroits où l'on puisse s'asseoir au chaud sans rien payer »",r:"Négation partielle <em>peu</em> (adverbe restrictif) + négation <em>sans rien</em> (pronom négatif). Double restriction qui souligne l'exclusion progressive de Vernon des espaces publics."}],
+en:["Comment l'itinéraire de Vernon permet-il une réflexion sur la société contemporaine ?","En quoi Vernon est-il un personnage en marge ? Quelles sont les causes de sa marginalisation ?","Quel regard Despentes porte-t-elle sur la ville et la société de consommation ?","Comparez la marginalité de Vernon à celle du narrateur de La Peau de l'ours."]}
+,
+{id:8,num:"08",titre:"Discours de la servitude volontaire",auteur:"Étienne de La Boétie",annee:"1574",oeuvre:"Discours de la servitude volontaire",
+entree:"Littérature d'idées",parcours:"Défendre et entretenir la liberté",statut:"Œuvre",em:"✊",cl:"#8B1A1A",
+pb:"Comment La Boétie argumente-t-il pour montrer que l'habitude pousse le peuple à servir volontairement un tyran ?",
+bio:"Étienne de La Boétie (1530–1563) est un humaniste français du XVIe siècle, magistrat au Parlement de Bordeaux et ami intime de Montaigne. Il rédige le Discours vers l'âge de 18 ans seulement, avant de mourir à 33 ans. Montaigne lui consacre son célèbre essai « De l'amitié » : « Parce que c'était lui, parce que c'était moi. »",
+ctx:"Le Discours de la servitude volontaire est un essai au titre paradoxal, rédigé vers 1548 et publié posthume en 1574. La Boétie y pose une question centrale : pourquoi les peuples acceptent-ils de se soumettre à un tyran alors qu'ils sont bien plus nombreux ? L'œuvre s'inscrit dans l'humanisme de la Renaissance et anticipe les grandes réflexions sur la liberté politique.",
+mv:[
+{a:1,b:4,t:"La thèse paradoxale",c:"#C0392B",desc:"La Boétie s'étonne lui-même — l'expression « il n'est pas croyable » annonce le paradoxe central : l'asservi semble choisir sa servitude. Les antithèses « assujetti/franchise » et « perdu sa liberté/gagné sa servitude » soulignent ce renversement : la liberté perdue est vécue comme un gain. C'est le cœur de la thèse."},
+{a:5,b:10,t:"Les deux figures de l'asservi",c:"#A93226",desc:"La Boétie distingue deux générations : ceux qui ont été contraints par la force, et ceux qui sont nés dans la servitude. Ces derniers sont les plus aliénés — ils servent « sans regret ». Le champ lexical de l'enfance (« naissant, nourris, élevés ») montre que l'habitude commence dès la naissance : la servitude semble naturelle."},
+{a:11,b:13,t:"Le reproche : ignorer ses ancêtres",c:"#922B21",desc:"Par une comparaison juridique, La Boétie reproche au peuple d'être plus négligent avec sa liberté qu'un héritier avec son patrimoine. Le ton ironique — « prodigue », « nonchalant » — relève du registre polémique : l'auteur interpelle et blâme, invite à regarder l'histoire pour réclamer la liberté."},
+{a:14,b:16,t:"La métaphore du poison",c:"#7B241C",desc:"La référence à Mithridate, roi qui s'habitua à boire du poison, est le point d'orgue de l'argumentation. La métaphore « avaler le venin de la servitude » est l'image-clé du texte : la servitude est un poison lent et invisible. La personnification de la coutume — « elle nous enseigne » — dénonce la force invisible de l'habitude, plus dangereuse que la force du tyran."}
+],
+vs:[
+{n:1,t:"Il n'est pas croyable comme le peuple, dès lors qu'il est assujetti, tombe si soudain en un tel"},
+{n:2,t:"et si profond oubli de la franchise, qu'il n'est pas possible qu'il se réveille pour la ravoir,"},
+{n:3,t:"servant si franchement et tant volontiers qu'on dirait, à le voir, qu'il a non pas perdu sa"},
+{n:4,t:"liberté, mais gagné sa servitude."},
+{n:5,t:"Il est vrai qu'au commencement on sert contraint et vaincu par la force ; mais ceux"},
+{n:6,t:"qui viennent après servent sans regret et font volontiers ce que leurs devanciers avaient fait"},
+{n:7,t:"par contrainte. Cela parce que les hommes naissant sous le joug, puis nourris et élevés dans"},
+{n:8,t:"le servage, sans regarder plus avant, se contentent de vivre comme ils sont nés ; et ne"},
+{n:9,t:"pensant point avoir d'autre bien ni d'autre droit que ce qu'ils ont trouvé, ils considèrent"},
+{n:10,t:"comme naturel l'état de leur naissance."},
+{n:11,t:"Toutefois, il n'est point d'héritier si prodigue et si nonchalant au point de ne jamais"},
+{n:12,t:"jeter un œil sur les registres de son père, pour voir s'il jouit de tous les droits de sa"},
+{n:13,t:"succession, ou si l'on n'a rien entrepris sur lui ou son prédécesseur."},
+{n:14,t:"Mais certes la coutume, qui a en toutes choses grand pouvoir sur nous, n'a jamais"},
+{n:15,t:"autant de puissance que quand elle nous enseigne à servir et, comme l'on dit de Mithridate"},
+{n:16,t:"qui s'habitua quotidiennement à boire du poison, elle nous apprend à avaler et à ne point trouver amer le venin de la servitude."}
+],
+nt:[],
+gr:[
+{q:"Analysez la négation dans : « il n'est pas croyable comme le peuple tombe en un si profond oubli »",r:"Négation totale <em>ne…pas</em> à valeur expressive. Elle traduit l'étonnement de La Boétie face au paradoxe central : l'intensité de la stupéfaction renforce l'effet rhétorique dès l'ouverture du texte."},
+{q:"Identifiez la subordonnée dans : « comme l'on dit de Mithridate qui s'habitua à boire du poison »",r:"Subordonnée relative introduite par <em>qui</em>, antécédent : Mithridate. Elle développe la comparaison avec le roi antique et ancre l'argumentation dans une référence culturelle humaniste."}
+],
+en:[]}
+];
+
+// ─── ÉTAT ───────────────────────────────────────────────────
+let S={vue:"accueil",id:null,ong:"texte",mouv:null,gq:null,eq:null,t1:720,t1act:false,t1iv:null,t2:480,t2act:false,t2iv:null,derOpen:false,defOpen:{},defView:"thematique"};
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function getMv(t,n){return t.mv.findIndex(m=>n>=m.a&&n<=m.b)}
+
+// ─── ACCUEIL ────────────────────────────────────────────────
+function htmlAccueil(){
+  const po=TX.filter(t=>t.entree.includes("Poésie"));
+  const ro=TX.filter(t=>t.entree.includes("Roman"));
+  const li=TX.filter(t=>t.entree.includes("Littérature"));
+  return`<div class="hero">
+  <div class="hero-label">Première technologique · Session 2026</div>
+  <h1 class="hero-title">Oral<br>de <span>français.</span></h1>
+  <p class="hero-sub">8 textes · 3 entrées pédagogiques · EAF juin 2026</p>
+  <p style="font-size:15px;color:#E63946;font-weight:400;margin-bottom:32px">⚠️ Cette app n'est qu'une aide à la révision, elle doit s'accompagner de votre texte !</p>
+
+  <div style="background:#fff;border-radius:14px;border:1px solid #e8e8e8;margin-bottom:36px;overflow:hidden">
+    <div onclick="toggleDer()" style="padding:18px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background='#fff'">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:32px;height:32px;border-radius:8px;background:#E63946;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📋</div>
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin-bottom:2px">Déroulement de l'épreuve</div>
+          <div style="font-size:13px;color:#888">Préparation 30 min · Lecture + explication + grammaire 12 min · Présentation de l'œuvre 8 min</div>
+        </div>
+      </div>
+      <div style="font-size:20px;color:#ccc;font-weight:300;transition:transform 0.2s;transform:rotate(${S.derOpen?90:0}deg)">›</div>
+    </div>
+    ${S.derOpen?`<div style="padding:0 24px 22px;border-top:1px solid #f0f0f0">
+      <div style="background:#f5f5f3;border-radius:8px;padding:8px 14px;margin:14px 0;font-size:12px;color:#888;display:flex;gap:16px;flex-wrap:wrap">
+        <span>⏱ Préparation : <strong style="color:#0d0d0d">30 min</strong></span>
+        <span>🎤 Lecture + explication + grammaire : <strong style="color:#0d0d0d">12 min</strong></span>
+        <span>📖 Partie 2 — Présentation de l'œuvre : <strong style="color:#0d0d0d">8 min</strong></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+      ${[
+        {txt:"L'examinateur choisit un texte parmi ceux que j'ai étudiés en classe et m'indique par écrit le passage à expliquer et la question de grammaire. Je signe la fiche.",pts:"",duree:"",bg:"#555",col:"#fff"},
+        {txt:"Je m'isole <strong>30 minutes</strong> pour préparer mon explication. Je n'ai accès qu'à la copie du texte — pas à mes notes. Je dois donc me souvenir de l'auteur, du contexte, des mouvements et des procédés étudiés en classe.",pts:"",duree:"30 min",bg:"#555",col:"#fff"},
+        {txt:"Je lis le texte <strong>à voix haute</strong> de façon expressive, après avoir situé brièvement l'extrait dans l'œuvre et le parcours.",pts:"2 pts",duree:"",bg:"#0d0d0d",col:"#fff"},
+        {txt:"Je fais l'<strong>explication linéaire</strong> du passage retenu, mouvement par mouvement, en analysant les procédés et leurs effets.",pts:"8 pts",duree:"",bg:"#0d0d0d",col:"#fff"},
+        {txt:"L'examinateur me pose une <strong>question de grammaire</strong> sur une phrase du texte. Je réponds.",pts:"2 pts",duree:"12 min au total",bg:"#0d0d0d",col:"#fff"},
+        {txt:"Je présente brièvement l'<strong>œuvre que j'ai choisie</strong> et j'explique pourquoi je l'ai retenue, en m'appuyant sur mes impressions personnelles de lecture.",pts:"",duree:"",bg:"#555",col:"#fff"},
+        {txt:"L'examinateur m'invite à approfondir, nuancer et défendre mon point de vue. C'est un <strong>échange personnel</strong> : je dois dialoguer, argumenter et montrer que j'ai vraiment lu et apprécié cette œuvre.",pts:"8 pts",duree:"8 min au total",bg:"#0d0d0d",col:"#fff"},
+      ].map(({txt,pts,duree,bg,col},i)=>`
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div style="width:22px;height:22px;border-radius:50%;background:${bg};color:${col};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">${i+1}</div>
+        <div style="flex:1;font-size:13px;line-height:1.6;color:#444">
+          ${txt}
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+            ${pts?`<div><span style="background:#f0f0f0;color:#0d0d0d;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px">${pts}</span></div>`:""}
+            ${duree?`<div><span style="background:#fff3e0;color:#e65100;font-size:11px;font-weight:700;padding:1px 8px;border-radius:20px">⏱ ${duree}</span></div>`:""}
+          </div>
+        </div>
+      </div>`).join("")}
+      </div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #f0f0f0;font-size:13px;font-weight:700;color:#0d0d0d">
+        ⏱ Durée totale devant l'examinateur : <span style="color:#E63946">20 minutes</span>
+      </div>
+    </div>`:""}
+  </div>
+
+  <div class="section-label">Poésie du XIXe au XXIe siècle</div>
+  <div style="font-size:12px;color:#aaa;margin-bottom:12px;font-weight:600">Parcours : Émancipations créatrices</div>
+  <div class="cards-grid">${po.map((t,i,arr)=>cardHTML(t,i,arr)).join("")}</div>
+
+  <div class="section-label">Roman et récit du Moyen Âge au XXIe siècle</div>
+  <div style="font-size:12px;color:#aaa;margin-bottom:12px;font-weight:600">Parcours : Personnages en marge, plaisirs du romanesque</div>
+  <div class="cards-grid">${ro.map((t,i,arr)=>cardHTML(t,i,arr)).join("")}</div>
+
+  <div class="section-label">Littérature d'idées du XVIe au XVIIIe siècle</div>
+  <div style="font-size:12px;color:#aaa;margin-bottom:12px;font-weight:600">Parcours : Défendre et entretenir la liberté</div>
+  <div class="cards-grid">${li.map((t,i,arr)=>cardHTML(t,i,arr)).join("")}</div>
+</div>`}
+
+function cardHTML(t,i,arr){
+  const first=i===0,last=i===arr.length-1;
+  const br=first&&last?"14px":first?"14px 14px 0 0":last?"0 0 14px 14px":"0";
+  return`<div class="texte-card" onclick="ouvrirTexte(${t.id})" style="border-radius:${br}">
+  <span class="card-num">${t.num}</span>
+  <div class="card-emoji">${t.em}</div>
+  <div class="card-content">
+    <div class="card-titre">«&nbsp;${t.titre}&nbsp;»<span class="card-badge">${t.statut}</span></div>
+    <div class="card-meta">${t.auteur} &mdash; <em>${t.oeuvre}</em>, ${t.annee}</div>
+  </div>
+  <span class="card-arrow">›</span>
+</div>`}
+
+// ─── DÉTAIL ─────────────────────────────────────────────────
+function htmlDetail(){
+  const t=TX.find(x=>x.id===S.id);
+  const ongs=[["texte","Texte"],["auteur","Auteur"],["grammaire","Grammaire"],["definitions","Définitions"],["conseils","Conseils"]];
+  let body="";
+
+  if(S.ong==="texte") body=htmlTexte(t);
+  else if(S.ong==="auteur") body=htmlAuteur(t);
+  else if(S.ong==="grammaire") body=htmlGrammaire(t);
+  else if(S.ong==="definitions") body=htmlDefinitions();
+  else if(S.ong==="conseils") body=htmlConseils();
+
+  return`<div class="detail-wrap">
+  <div class="detail-header">
+    <button class="back-btn" onclick="retour()">← Retour</button>
+    <div class="detail-num">${t.num} / 07 &mdash; ${t.statut}</div>
+    <h2 class="detail-titre">«&nbsp;${t.titre.split(" ").slice(0,3).join(" ")}<br><span>${t.titre.split(" ").slice(3).join(" ")||t.auteur}</span>&nbsp;»</h2>
+    <div class="detail-auteur">${t.auteur} &mdash; <em>${t.oeuvre}</em>, ${t.annee}</div>
+    <div class="detail-parcours" style="border-left:3px solid ${t.cl}">
+      <span style="color:${t.cl}">●</span> ${t.parcours}
+    </div>
+  </div>
+  <div class="tabs">
+    ${ongs.map(([id,lbl])=>`<button class="tab-btn${S.ong===id?" active":""}" onclick="setOng('${id}')">${lbl}</button>`).join("")}
+  </div>
+  ${body}
+</div>`}
+
+function htmlTexte(t){
+  const mvActif=S.mouv!==null?t.mv[S.mouv]:null;
+  const mouvs=t.mv.map((m,i)=>`
+  <div class="mv-card${S.mouv===i?" active":""}" onclick="toggleMouv(${i})">
+    <div class="mv-indicator" style="background:${S.mouv===i?"#E63946":m.c}"></div>
+    <div class="mv-num">0${i+1}</div>
+    <div class="mv-titre">${m.t}</div>
+    ${S.mouv===i?`<div style="font-size:11px;color:#E63946;font-weight:700;margin-bottom:6px">lignes ${m.a} → ${m.b}</div><div class="mv-desc">${m.desc}</div>`:""}
+  </div>`).join("");
+
+  const lignes=t.vs.map(v=>{
+    const mi=getMv(t,v.n);
+    const mc=mi>=0?t.mv[mi].c:null;
+    const vis=S.mouv===null||S.mouv===mi;
+    const isBorne=mvActif&&(v.n===mvActif.a||v.n===mvActif.b);
+    const showNum=v.n%5===0||isBorne;
+    const numClass=isBorne?"ligne-num borne":"ligne-num";
+    const num=showNum?`<span class="${numClass}">${v.n}</span>`:`<span class="ligne-num"></span>`;
+    return`<div class="texte-ligne" style="opacity:${vis?1:0.35}">
+      ${num}
+      <span class="ligne-texte" style="border-left-color:${S.mouv===mi&&mc?mc:"transparent"};background:${S.mouv===mi&&mc?mc+"15":"transparent"}">${v.t}</span>
+    </div>`}).join("");
+
+  const notes=t.nt.length?`<div class="texte-notes">${t.nt.map(n=>`<div class="texte-note">${n}</div>`).join("")}</div>`:"";
+
+  const tc1=S.t1<60?"danger":"";
+  const tc2=S.t2<60?"danger":"";
+  return`
+  <div class="pb-bloc">
+    <div class="pb-label">Problématique</div>
+    <div class="pb-texte">${t.pb}</div>
+    <div class="pb-def">La problématique, c'est la question littéraire que pose le texte. Elle guide toute ton explication : chaque mouvement doit y apporter un élément de réponse.</div>
+  </div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:10px">Les mouvements du texte</div>
+  <div class="mv-grid">${mouvs}</div>
+  <div class="texte-bloc">${lignes}${notes}</div>
+
+  <div class="timer-bloc${S.t1act?" running":""}">
+    <div style="flex:1">
+      <div class="timer-label">🎤 Partie 1 — Exposé — 12 min</div>
+      <div class="timer-sub" style="margin-top:6px;line-height:1.7">
+        Lecture expressive <span style="font-weight:700;color:#E63946">2 pts</span> &nbsp;·&nbsp;
+        Explication linéaire <span style="font-weight:700;color:#E63946">8 pts</span> &nbsp;·&nbsp;
+        Question de grammaire <span style="font-weight:700;color:#E63946">2 pts</span>
+      </div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div id="t1disp" class="timer-display ${tc1}">${fmt(S.t1)}</div>
+      <div class="timer-btns">
+        <button class="t-btn t-play" onclick="toggleT1()">${S.t1act?"⏸ Pause":"▶ Start"}</button>
+        <button class="t-btn t-reset" onclick="resetT1()">↺</button>
+      </div>
+    </div>
+  </div>
+  ${S.t1===0?`<div class="timer-end">⏰ Temps écoulé — passez à la présentation de l'œuvre.</div>`:""}
+
+  <div class="timer-bloc${S.t2act?" running":""}" style="margin-top:10px">
+    <div style="flex:1">
+      <div class="timer-label">📖 Présentation de l'œuvre — 8 min</div>
+      <div class="timer-sub" style="margin-top:6px;line-height:1.7">
+        Présentation brève de l'œuvre choisie &nbsp;·&nbsp;
+        Entretien avec l'examinateur &nbsp;·&nbsp;
+        Défendre son point de vue personnel
+      </div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div id="t2disp" class="timer-display ${tc2}">${fmt(S.t2)}</div>
+      <div class="timer-btns">
+        <button class="t-btn t-play" onclick="toggleT2()">${S.t2act?"⏸ Pause":"▶ Start"}</button>
+        <button class="t-btn t-reset" onclick="resetT2()">↺</button>
+      </div>
+    </div>
+  </div>
+  ${S.t2===0?`<div class="timer-end">⏰ Temps écoulé — l'examinateur vous coupe.</div>`:""}
+  `}
+
+function htmlAuteur(t){
+  return`
+  <div class="auteur-bloc">
+    <div class="auteur-header">
+      <div class="auteur-emoji">${t.em}</div>
+      <div>
+        <div class="auteur-name">${t.auteur}</div>
+        <div class="auteur-oeuvre">${t.oeuvre} (${t.annee})</div>
+      </div>
+    </div>
+    <div class="auteur-body">
+      <div class="auteur-section">
+        <div class="auteur-section-label">Biographie</div>
+        <div class="auteur-section-text">${t.bio}</div>
+      </div>
+      <div class="auteur-section">
+        <div class="auteur-section-label">Contexte littéraire & historique</div>
+        <div class="auteur-section-text">${t.ctx}</div>
+      </div>
+    </div>
+  </div>
+  <div class="fiche">
+    <div class="fiche-title">Fiche récapitulative</div>
+    ${[["Entrée pédagogique",t.entree],["Parcours",t.parcours],["Statut",t.statut==="Œuvre"?"✅ Extrait de l'œuvre au programme":"📌 Texte du parcours associé"],["Mouvements",t.mv.length+" mouvements identifiés"]].map(([k,v])=>`
+    <div class="fiche-row"><span class="fiche-key">${k}</span><span class="fiche-val">${v}</span></div>`).join("")}
+  </div>`}
+
+function htmlGrammaire(t){
+  return`
+  <div class="gram-alert">
+    <strong>📌 Rappel Éduscol :</strong> La question porte sur <strong>une seule notion syntaxique</strong>, tirée d'une courte phrase du texte. Durée max : <strong>2 minutes</strong>.<br>
+    Notions déjà vues en classe : <strong>interrogation</strong> et <strong>négation</strong>.
+  </div>
+  ${t.gr.map((q,i)=>`
+  <div class="gram-card">
+    <div class="gram-qnum">Question ${i+1}</div>
+    <div class="gram-q">${q.q}</div>
+    <button class="gram-btn" onclick="toggleGram(${i})">${S.gq===i?"▲ Masquer la correction":"▼ Voir la correction"}</button>
+    ${S.gq===i?`<div class="gram-rep">${q.r}</div>`:""}
+  </div>`).join("")}`}
+
+function htmlDefinitions(){
+  if(!S.defOpen) S.defOpen={};
+  const cats=[
+    {titre:"Littérature d'idées",couleur:"#8B1A1A",defs:[
+      {mot:"Essai",def:"Le Discours de la servitude volontaire n'est pas un roman, ni un poème : c'est un essai. La Boétie y développe une thèse personnelle, s'adresse directement au lecteur (« il n'est pas croyable »), argumente, ironise. L'essai est un genre de la littérature d'idées où l'auteur réfléchit à voix haute sur un sujet qui l'engage."},
+      {mot:"Thèse et argumentation",def:"Dès la première ligne, La Boétie pose sa thèse : le peuple oublie sa liberté et choisit de servir. Il l'argumente ensuite en quatre étapes — les contraints, les nés dans la servitude, l'ignorance de l'histoire, le poison de la coutume. C'est ça l'argumentation : une idée centrale, défendue par des preuves organisées."},
+      {mot:"Paradoxe",def:"« Servitude volontaire » : comment peut-on choisir librement d'être esclave ? C'est un paradoxe — une formulation qui semble contradictoire mais révèle une vérité profonde. La Boétie construit tout son texte sur ce renversement : la liberté perdue est vécue comme « gagnée »."},
+      {mot:"Rhétorique",def:"La Boétie ne décrit pas : il convainc. Il utilise pour cela des antithèses (« assujetti/franchise »), des comparaisons (l'héritier, Mithridate), des personnifications (la coutume « enseigne »). L'ensemble de ces procédés au service de la persuasion, c'est la rhétorique."},
+      {mot:"Humanisme",def:"La Boétie est un humaniste du XVIe siècle : il croit que la raison et l'éducation peuvent libérer l'homme. Sa référence à Mithridate, son image de l'héritier qui consulte les « registres de son père » — ce sont des références culturelles et historiques typiques de l'écriture humaniste. Dans <em>Manon Lescaut</em>, Prévost prolonge cet esprit : il s'intéresse à la psychologie fine de Des Grieux, à ses contradictions, à sa chute. Cette attention portée à l'homme, à ses passions et à sa liberté, c'est l'héritage de la Renaissance."},
+      {mot:"Registre polémique",def:"Quand La Boétie parle de l'héritier « prodigue et nonchalant », il ne constate pas : il blâme. Il interpelle le lecteur, l'accuse presque de sa propre servitude. Ce ton d'attaque, de reproche, voire d'indignation, c'est le registre polémique."},
+      {mot:"Ironie",def:"La Boétie écrit que le peuple a « non pas perdu sa liberté, mais gagné sa servitude ». Ce renversement sarcastique — présenter comme un gain ce qui est une perte — c'est l'ironie. Elle force le lecteur à prendre conscience du paradoxe en le formulant de façon absurde."},
+    ]},
+    {titre:"Mouvements littéraires",couleur:"#7B2D8B",defs:[
+      {mot:"Romantisme",def:"Dans <em>Les Contemplations</em>, Hugo évoque avec mélancolie un souvenir de jeunesse, une promenade dans les bois avec Rose. Cette nostalgie, ce lyrisme du moi, ce cadre naturel complice des émotions : c'est le romantisme. Un mouvement du XIXe siècle qui met les sentiments personnels au centre de l'écriture."},
+      {mot:"Parnasse",def:"Le <em>Dormeur du val</em> est un sonnet en alexandrins, avec une construction rigoureuse en quatre mouvements, une chute calculée. Cette maîtrise formelle au service d'une beauté froide, c'est l'héritage du Parnasse — le mouvement qui, dans les années 1860, prône la perfection technique et l'art pour l'art. Rimbaud s'en inspire avant de s'en émanciper."},
+      {mot:"Symbolisme",def:"À la fin du <em>Dormeur du val</em>, Rimbaud ne dit pas que le soldat est mort : il suggère, il laisse deviner par des indices (les glaïeuls, le froid, les deux trous rouges). Cette façon de ne pas nommer, de passer par des symboles et des images, annonce le symbolisme."},
+      {mot:"Réalisme / Naturalisme",def:"Despentes nomme des rues parisiennes réelles (avenue des Gobelins, place d'Italie), décrit les vêtements soldés, les bancs arrachés. Sorman dresse une liste clinique d'animaux comme une encyclopédie. Ce souci de coller à la réalité, de la décrire avec précision et sans embellissement, c'est l'héritage du réalisme et du naturalisme."},
+    ]},
+    {titre:"Notions de poésie",couleur:"#2D6A4F",defs:[
+      {mot:"Sonnet",def:"<em>Au Cabaret-Vert</em> et <em>Ma Bohème</em> sont des sonnets : 14 vers, deux quatrains, deux tercets. Mais Rimbaud joue avec cette forme classique — ses alexandrins sont dissymétriques, ses rimes inattendues (« fantastiques / élastiques »). Il utilise le moule pour mieux le faire craquer."},
+      {mot:"Alexandrin",def:"Dans <em>Au Cabaret-Vert</em>, Rimbaud écrit en alexandrins (12 syllabes), mais il en décale les coupes : au vers 1, la césure tombe après « jours » (4e syllabe) au lieu de la 6e. Cette irrégularité crée une sensation de mouvement, de liberté — comme la démarche du poète fugueur."},
+      {mot:"Vers impair",def:"Hugo choisit l'heptasyllabe (7 syllabes) pour <em>Vieille chanson du jeune temps</em>. Un vers impair, instable, avec une césure flottante. Verlaine dira plus tard qu'il faut préférer « l'impair, plus vague et plus soluble dans l'air ». Ce rythme de chanson colle parfaitement au souvenir léger et mélancolique de Hugo."},
+      {mot:"Enjambement / Rejet",def:"Dans <em>Au Cabaret-Vert</em>, « Verte » est rejeté en début de vers 6, seul, détaché de la table qu'il qualifie. Dans <em>Le Dormeur du val</em>, « Luit » ouvre le vers 4 de la même façon. Ces mots isolés en début de vers, c'est le rejet. L'enjambement, c'est la phrase qui déborde d'un vers à l'autre, comme si elle refusait de s'arrêter."},
+      {mot:"Allitération / Assonance",def:"Dans <em>Le Dormeur du val</em>, l'assonance en [an] (« chante », « accrochant », « follement », « argent ») crée une musique douce qui berce le lecteur — avant la chute brutale. Dans <em>Au Cabaret-Vert</em>, l'allitération en [ch] (« déchiré », « chemins », « Charleroi ») évoque la rudesse du chemin parcouru."},
+      {mot:"Synesthésie",def:"Dans <em>Ma Bohème</em>, Rimbaud sent la rosée sur son front « comme un vin de vigueur » : il mêle le toucher (la fraîcheur) et le goût (le vin). Mélanger des sensations qui viennent de sens différents dans une même image, c'est une synesthésie. Un procédé cher aux symbolistes."},
+    ]},
+    {titre:"Notions de récit",couleur:"#C25E1A",defs:[
+      {mot:"Focalisation interne",def:"Dans <em>Manon Lescaut</em>, on voit la scène uniquement à travers les yeux de Des Grieux. On ne sait pas ce que pense Manon — on ne sait que ce que Des Grieux observe et ressent. C'est la focalisation interne : le narrateur adopte le point de vue d'un seul personnage."},
+      {mot:"Narrateur rétrospectif",def:"Des Grieux commence par « Hélas ! que ne le marquais-je un jour plus tôt ! » : il raconte depuis le futur, avec le recul et le regret. Il sait déjà comment l'histoire finit. Ce décalage entre le Des Grieux qui vécut et celui qui raconte crée une tension tragique dès les premières lignes."},
+      {mot:"Discours indirect libre",def:"Dans <em>Manon Lescaut</em>, Prévost écrit : « c'était malgré elle qu'on l'envoyait au couvent ». Pas de guillemets, pas de « elle dit que » — pourtant on entend la voix de Manon. C'est le discours indirect libre : les paroles ou pensées d'un personnage glissent dans le récit sans être formellement introduites."},
+      {mot:"Topos",def:"La scène de rencontre amoureuse dans <em>Manon Lescaut</em> (coup de foudre, jeune fille seule, bouleversement du héros) est un topos : un motif récurrent de la littérature, un passage presque obligé. Prévost y ajoute une touche originale — le décalage entre l'innocence affichée de Des Grieux et l'expérience cachée de Manon. Pluriel : topoï."},
+    ]},
+    {titre:"Figures de style",couleur:"#1A3C5C",defs:[
+      {mot:"Clausule",def:"Dans <em>Le Dormeur du val</em>, Rimbaud place « il a froid » en clausule — en toute fin de vers, après la virgule. Ce mot isolé frappe comme un coup : c'est le moment où le rythme s'arrête pour marquer la fin d'une idée. La clausule, c'est le dernier membre d'une phrase, d'un vers ou d'un paragraphe — souvent l'endroit où l'auteur place sa révélation. 💡 Astuce : clausule vient du latin <em>clausula</em>, de la même famille que <em>to close</em> en anglais — c'est ce qui ferme, ce qui clôt."},
+      {mot:"Métaphore",def:"Dans <em>La Peau de l'ours</em>, Sorman décrit le narrateur comme « un animal sous cloche » : pas de « comme », pas de comparaison explicite — l'animal est directement assimilé à un objet de vitrine. Cette image directe, sans filet, c'est la métaphore. Elle dit plus qu'une comparaison : elle fusionne les deux réalités."},
+      {mot:"Comparaison",def:"Dans <em>Le Dormeur du val</em>, Rimbaud écrit : « Souriant comme sourirait un enfant malade ». Le « comme » est là, il construit un pont entre le soldat et l'enfant. La comparaison suggère la vulnérabilité, l'innocence — et prépare discrètement la révélation finale."},
+      {mot:"Hyperbole",def:"Dans <em>Manon Lescaut</em>, Des Grieux voit le projet du couvent comme « un coup mortel pour ses désirs ». Il vient de rencontrer Manon depuis cinq minutes. Cette exagération révèle la violence de la passion qui vient de s'emparer de lui — c'est l'hyperbole au service de la psychologie du personnage."},
+      {mot:"Antithèse",def:"Dans <em>Vieille chanson du jeune temps</em>, Hugo oppose sans cesse les deux personnages : lui froid, elle brillante ; lui sourd, elle chantée par les rossignols. Ces contrastes construits en miroir, c'est l'antithèse. Elle rend le décalage comique et mélancolique à la fois."},
+      {mot:"Anaphore",def:"Dans <em>La Peau de l'ours</em>, Sorman répète « on » : « on viendra m'admirer », « on m'étudiera », « on me préservera ». Cette répétition en début de proposition, c'est l'anaphore. Elle crée un effet d'écrasement — personne en particulier n'est responsable, tout le monde exploite l'animal."},
+      {mot:"Accumulation / Énumération",def:"Dans <em>La Peau de l'ours</em>, Sorman liste pendant 11 lignes tous les animaux du zoo : ceux qui volent, sautent, rampent, aux trompes, aux cornes... Cette accumulation traduit l'infinie richesse de la nature — et son absurde réduction dans un espace limité."},
+      {mot:"Périphrase",def:"Dans <em>Manon Lescaut</em>, Des Grieux ne dit pas « Manon » : il dit « la maîtresse de mon cœur ». Remplacer un mot par plusieurs qui le décrivent, c'est la périphrase. Ici, elle révèle l'état émotionnel du narrateur : il ne voit plus une jeune fille, il voit déjà son destin."},
+    ]},
+  ];
+  if(!S.defView) S.defView="thematique";
+  // Flatten all defs for alphabetical view
+  const allDefs=cats.flatMap((cat,ci)=>cat.defs.map((d,di)=>({...d,couleur:cat.couleur,key:`${ci}-${di}`})))
+    .sort((a,b)=>a.mot.localeCompare(b.mot,"fr"));
+
+  const defItem=(d,couleur,key)=>{
+    const open=S.defOpen[key];
+    return`<div style="background:#fff;border-radius:10px;border:1px solid ${open?couleur:'#e8e8e8'};overflow:hidden;transition:border-color 0.15s">
+      <div onclick="toggleDef('${key}')" style="padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background='#fff'">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11px;font-weight:700;color:${couleur};min-width:8px">●</span>
+          <span style="font-size:14px;font-weight:700;color:#0d0d0d">${d.mot}</span>
+        </div>
+        <div style="font-size:18px;color:#ccc;font-weight:300;transition:transform 0.2s;transform:rotate(${open?90:0}deg);flex-shrink:0">›</div>
+      </div>
+      ${open?`<div style="padding:0 16px 14px;border-top:1px solid #f0f0f0">
+        <div style="font-size:13px;color:#555;line-height:1.75;padding-top:12px">${d.def}</div>
+      </div>`:""}
+    </div>`;
+  };
+
+  return`
+  <div style="display:flex;gap:4px;margin-bottom:20px;background:#f0f0f0;border-radius:10px;padding:4px">
+    <button onclick="setDefView('thematique')" style="flex:1;border:none;border-radius:7px;padding:8px;font-size:13px;font-weight:600;cursor:pointer;background:${S.defView==='thematique'?'#fff':'transparent'};color:${S.defView==='thematique'?'#0d0d0d':'#888'};box-shadow:${S.defView==='thematique'?'0 1px 4px rgba(0,0,0,0.1)':'none'}">Par thème</button>
+    <button onclick="setDefView('alpha')" style="flex:1;border:none;border-radius:7px;padding:8px;font-size:13px;font-weight:600;cursor:pointer;background:${S.defView==='alpha'?'#fff':'transparent'};color:${S.defView==='alpha'?'#0d0d0d':'#888'};box-shadow:${S.defView==='alpha'?'0 1px 4px rgba(0,0,0,0.1)':'none'}">Alphabétique</button>
+  </div>
+
+  ${S.defView==='thematique'?`
+  <div style="display:flex;flex-direction:column;gap:16px">
+    ${cats.map((cat,ci)=>`
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${cat.couleur};margin-bottom:8px">${cat.titre}</div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        ${cat.defs.map((d,di)=>defItem(d,cat.couleur,`${ci}-${di}`)).join("")}
+      </div>
+    </div>`).join("")}
+  </div>
+  `:`
+  <div style="display:flex;flex-direction:column;gap:2px">
+    ${allDefs.map(d=>defItem(d,d.couleur,d.key)).join("")}
+  </div>
+  `}`}
+
+function htmlConseils(){
+  return`
+  ${[
+    {icone:"📖",titre:"Connaissez parfaitement votre texte",texte:"Auteur, œuvre, contexte historique et littéraire, problématique. Lisez-le et relisez-le. Sans notes, vous devez tout restituer de mémoire pendant les 30 minutes de préparation."},
+    {icone:"🗂",titre:"Comprenez bien les mouvements",texte:"C'est-à-dire comment le texte s'articule, comment il progresse d'une idée à l'autre. Entraînez-vous à les délimiter à l'oral : « Le premier mouvement va du vers 1 au vers 4... »"},
+    {icone:"🎙",titre:"Soignez la lecture expressive",texte:"C'est 2 points relativement faciles si vous avez travaillé la mise en voix. Marquez les pauses, variez le rythme, adressez votre lecture à l'examinateur."},
+    {icone:"🔤",titre:"Pour la question de grammaire",texte:"Restez calme. Identifiez la notion, utilisez le vocabulaire grammatical précis, appuyez-vous sur la phrase du texte."},
+    {icone:"💬",titre:"Pour la présentation de l'œuvre",texte:"Parlez à la première personne, assumez vos goûts. Ce n'est plus une explication : c'est un échange personnel. L'examinateur veut vous entendre, pas réciter un cours."},
+    {icone:"🌬",titre:"Respirez !",texte:"Comme en cours, l'oral est un exercice de présentation. Cette fois, c'est à vous de transmettre vos connaissances. Il n'y a pas de pièges."},
+  ].map(({icone,titre,texte},i)=>`
+  <div style="background:#fff;border-radius:14px;border:1px solid #e8e8e8;padding:18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start">
+    <div style="width:38px;height:38px;border-radius:10px;background:#f5f5f3;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${icone}</div>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:#0d0d0d;margin-bottom:5px">${i+1}. ${titre}</div>
+      <div style="font-size:13px;color:#666;line-height:1.7">${texte}</div>
+    </div>
+  </div>`).join("")}`}
+
+// ─── RENDER ─────────────────────────────────────────────────
+function render(scrollTop){
+  const pos=scrollTop!==undefined?scrollTop:null;
+  document.getElementById("app").innerHTML=S.vue==="accueil"?htmlAccueil():htmlDetail();
+  // Widget flottant
+  let fw=document.getElementById("float-widget");
+  if(!fw){
+    fw=document.createElement("div");
+    fw.id="float-widget";
+    document.body.appendChild(fw);
+  }
+  const active=S.t1act||S.t2act;
+  const isT1=S.t1act;
+  const timer=isT1?S.t1:S.t2;
+  const label=isT1?"🎤 Exposé — 12 min":"📖 Présentation — 8 min";
+  const tc=timer<60?" danger":"";
+  const playFn=isT1?"toggleT1()":"toggleT2()";
+  const resetFn=isT1?"resetT1()":"resetT2()";
+  const playIcon=(isT1?S.t1act:S.t2act)?"⏸":"▶";
+  const hidden=active?"":" hidden";
+  fw.innerHTML='<div class="float-timer'+hidden+'">'
+    +'<div>'
+    +'<div class="float-label">'+label+'</div>'
+    +'<div id="fdisp" class="float-display'+tc+'">'+fmt(timer)+'</div>'
+    +'</div>'
+    +'<div class="float-btns">'
+    +'<button class="float-btn float-play" onclick="'+playFn+'">'+playIcon+'</button>'
+    +'<button class="float-btn float-reset" onclick="'+resetFn+'">↺</button>'
+    +'</div>'
+    +'</div>';
+  if(pos!==null) window.scrollTo(0,pos);
+  else window.scrollTo(0,0);
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────
+function ouvrirTexte(id){stopAll();S={vue:"detail",id,ong:"texte",mouv:null,gq:null,eq:null,t1:720,t1act:false,t1iv:null,t2:480,t2act:false,t2iv:null,derOpen:S.derOpen};render()}
+function retour(){stopAll();S={...S,vue:"accueil"};render()}
+function setOng(o){S={...S,ong:o,gq:null,eq:null};render()}
+function toggleMouv(i){const p=window.scrollY;S.mouv=S.mouv===i?null:i;render(p)}
+function toggleGram(i){const p=window.scrollY;S.gq=S.gq===i?null:i;render(p)}
+function toggleDer(){const p=window.scrollY;S.derOpen=!S.derOpen;render(p)}
+function toggleDef(key){const p=window.scrollY;const wasOpen=S.defOpen[key];S.defOpen={};if(!wasOpen)S.defOpen[key]=true;render(p)}
+function setDefView(v){S.defView=v;S.defOpen={};render(0)}
+
+function toggleT1(){const p=window.scrollY;if(S.t1act){stopT1();}else{stopT2();startT1();}render(p)}
+function resetT1(){const p=window.scrollY;stopT1();S.t1=720;render(p)}
+function toggleT2(){const p=window.scrollY;if(S.t2act){stopT2();}else{stopT1();startT2();}render(p)}
+function resetT2(){const p=window.scrollY;stopT2();S.t2=480;render(p)}
+
+function startT1(){
+  S.t1act=true;
+  S.t1iv=setInterval(()=>{
+    if(S.t1>0){
+      S.t1--;
+      const d=document.getElementById("t1disp");
+      if(d){d.textContent=fmt(S.t1);d.className="timer-display"+(S.t1<60?" danger":"");}
+      const f=document.getElementById("fdisp");
+      if(f){f.textContent=fmt(S.t1);f.className="float-display"+(S.t1<60?" danger":"");}
+    }else{stopT1();render(window.scrollY);}
+  },1000);
+}
+function stopT1(){clearInterval(S.t1iv);S.t1act=false;}
+
+function startT2(){
+  S.t2act=true;
+  S.t2iv=setInterval(()=>{
+    if(S.t2>0){
+      S.t2--;
+      const d=document.getElementById("t2disp");
+      if(d){d.textContent=fmt(S.t2);d.className="timer-display"+(S.t2<60?" danger":"");}
+      const f=document.getElementById("fdisp");
+      if(f){f.textContent=fmt(S.t2);f.className="float-display"+(S.t2<60?" danger":"");}
+    }else{stopT2();render(window.scrollY);}
+  },1000);
+}
+function stopT2(){clearInterval(S.t2iv);S.t2act=false;}
+function stopAll(){stopT1();stopT2();}
+
+render();
+</script>
+</body>
+</html>
