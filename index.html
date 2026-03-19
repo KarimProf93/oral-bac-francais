@@ -76,6 +76,28 @@ button{cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
 /* MOUVEMENTS */
 .mv-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px}
 @media(max-width:500px){.mv-grid{grid-template-columns:1fr}}
+
+/* RESPONSIVE MOBILE */
+@media(max-width:480px){
+  .hero{padding:28px 16px 20px}
+  .hero-title{font-size:32px}
+  .detail-wrap{padding:0 12px 40px}
+  .detail-header{padding:20px 0 16px}
+  .detail-titre{font-size:24px}
+  .tabs{gap:2px;padding:3px}
+  .tab-btn{padding:7px 10px;font-size:12px}
+  .texte-bloc{padding:16px 14px}
+  .timer-bloc{flex-direction:column;align-items:flex-start;gap:10px}
+  .timer-bloc > div:last-child{width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .timer-display{font-size:32px}
+  .auteur-header{padding:16px}
+  .auteur-name{font-size:18px}
+  .fiche-key{min-width:120px}
+  .cards-grid{gap:1px}
+  .texte-card{padding:14px 16px;gap:12px}
+  .float-timer{bottom:16px;right:12px;padding:10px 14px;min-width:160px}
+  .float-display{font-size:22px}
+}
 .mv-card{border:1.5px solid #e8e8e8;border-radius:10px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff;text-align:left}
 .mv-card.active{border-color:#E63946;background:#F8F4F4}
 .mv-card:hover:not(.active){border-color:#aaa;background:#fafafa}
