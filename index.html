@@ -79,6 +79,7 @@ button{cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
 
 /* RESPONSIVE MOBILE */
 @media(max-width:480px){
+  .mv-grid{grid-template-columns:1fr}
   .hero{padding:28px 16px 20px}
   .hero-title{font-size:32px}
   .detail-wrap{padding:0 12px 40px}
@@ -86,7 +87,8 @@ button{cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
   .detail-titre{font-size:24px}
   .tabs{gap:2px;padding:3px}
   .tab-btn{padding:7px 10px;font-size:12px}
-  .texte-bloc{padding:16px 14px}
+  .texte-bloc{padding:16px 10px}
+  .ligne-texte{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .timer-bloc{flex-direction:column;align-items:flex-start;gap:10px}
   .timer-bloc > div:last-child{width:100%;display:flex;align-items:center;gap:12px;justify-content:space-between}
   .timer-display{font-size:32px}
@@ -111,6 +113,13 @@ button{cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
 
 /* TEXTE */
 .texte-bloc{background:#fff;border-radius:14px;padding:28px;border:1px solid #e8e8e8;margin-bottom:20px}
+.texte-bloc.poesie{overflow-x:auto}
+.texte-bloc.poesie .texte-ligne{flex-wrap:nowrap;white-space:nowrap}
+.texte-bloc.poesie .ligne-texte{white-space:nowrap;flex:none}
+@media(max-width:480px){
+  .texte-bloc.poesie{padding:14px 10px}
+  .texte-bloc.poesie .ligne-texte{font-size:12px;line-height:1.8}
+}
 .texte-ligne{display:flex;gap:12px;align-items:baseline;padding:2px 0;transition:opacity 0.2s}
 .ligne-num{font-size:11px;color:#ccc;font-family:monospace;min-width:24px;text-align:right;flex-shrink:0}
 .ligne-num.borne{font-size:12px;font-weight:700;color:#E63946;}
@@ -470,12 +479,13 @@ function htmlTexte(t){
     const isBorne=mvActif&&(v.n===mvActif.a||v.n===mvActif.b);
     const showNum=v.n%5===0||isBorne;
     const numClass=isBorne?"ligne-num borne":"ligne-num";
-    const num=showNum?`<span class="${numClass}">${v.n}</span>`:`<span class="ligne-num"></span>`;
+    const num=`<span class="${numClass}">${v.n}</span>`;
     return`<div class="texte-ligne" style="opacity:${vis?1:0.35}">
       ${num}
       <span class="ligne-texte" style="border-left-color:${S.mouv===mi&&mc?mc:"transparent"};background:${S.mouv===mi&&mc?mc+"15":"transparent"}">${v.t}</span>
     </div>`}).join("");
 
+  const isPoesie=t.entree.includes("Poésie");
   const notes=t.nt.length?`<div class="texte-notes">${t.nt.map(n=>`<div class="texte-note">${n}</div>`).join("")}</div>`:"";
 
   const tc1=S.t1<60?"danger":"";
@@ -488,7 +498,7 @@ function htmlTexte(t){
   </div>
   <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:10px">Les mouvements du texte</div>
   <div class="mv-grid">${mouvs}</div>
-  <div class="texte-bloc">${lignes}${notes}</div>
+  <div class="texte-bloc${isPoesie?" poesie":""}">${lignes}${notes}</div>
 
   <div class="timer-bloc${S.t1act?" running":""}">
     <div style="flex:1">
