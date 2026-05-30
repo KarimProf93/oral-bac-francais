@@ -489,7 +489,7 @@ en:[]}
 ];
 
 // ─── ÉTAT ───────────────────────────────────────────────────
-let S={vue:"accueil",id:null,ong:"texte",mouv:null,gq:null,eq:null,t1:720,t1act:false,t1iv:null,t2:480,t2act:false,t2iv:null,derOpen:false,defOpen:{},defView:"thematique"};
+let S={vue:"accueil",id:null,ong:"texte",mouv:null,gq:null,eq:null,t1:720,t1act:false,t1iv:null,t2:480,t2act:false,t2iv:null,derOpen:false,defOpen:{},defView:"thematique",crVue:"oral",crOpen:{}};
 function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
 function getMv(t,n){return t.mv.findIndex(m=>n>=m.a&&n<=m.b)}
 
@@ -503,7 +503,15 @@ function htmlAccueil(){
   <div class="hero-label">Première technologique · Session 2026</div>
   <h1 class="hero-title">Oral<br>de <span>français.</span></h1>
   <p class="hero-sub">11 textes · 4 entrées pédagogiques · EAF juin 2026</p>
-  <p style="font-size:15px;color:#E63946;font-weight:400;margin-bottom:32px">⚠️ Cette app n'est qu'une aide à la révision, elle doit s'accompagner de votre texte !</p>
+  <p style="font-size:15px;color:#E63946;font-weight:400;margin-bottom:20px">⚠️ Cette app n'est qu'une aide à la révision, elle doit s'accompagner de votre texte !</p>
+  <button onclick="ouvrirRevision()" style="display:flex;align-items:center;gap:10px;background:#0d0d0d;color:#fff;border:none;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:32px;width:100%">
+    <span style="font-size:20px">📚</span>
+    <div style="text-align:left">
+      <div>Conseils de révision</div>
+      <div style="font-size:11px;font-weight:400;color:#aaa;margin-top:1px">Oral · Commentaire de texte</div>
+    </div>
+    <span style="margin-left:auto;font-size:18px;color:#aaa">›</span>
+  </button>
 
   <div style="background:#fff;border-radius:14px;border:1px solid #e8e8e8;margin-bottom:36px;overflow:hidden">
     <div onclick="toggleDer()" style="padding:18px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background='#fff'">
@@ -719,9 +727,18 @@ function htmlAuteur(t){
 
 function htmlGrammaire(t){
   return`
+  <div style="background:#fff;border-radius:12px;border:1px solid #e8e8e8;padding:16px;margin-bottom:16px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin-bottom:10px">Méthode — 3 étapes (2 pts)</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:#f5f5f3;border-radius:8px;padding:8px 12px;font-size:13px;color:#444"><strong>1. Nommer</strong> — Identifiez la nature exacte (ex : « Proposition subordonnée conjonctive »)</div>
+      <div style="background:#f5f5f3;border-radius:8px;padding:8px 12px;font-size:13px;color:#444"><strong>2. Démontrer</strong> — Citez le mot qui l'introduit (ex : « Introduite par la conjonction <em>bien que</em> »)</div>
+      <div style="background:#f5f5f3;border-radius:8px;padding:8px 12px;font-size:13px;color:#444"><strong>3. Expliquer</strong> — Donnez la relation logique ou la fonction (ex : « Elle exprime une concession »)</div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:#aaa">La fiche complète (relatives, conjonctives, complétives) est dans <strong>Conseils de révision → L'oral</strong>.</div>
+  </div>
   <div class="gram-alert">
     <strong>📌 Rappel Éduscol :</strong> La question porte sur <strong>une seule notion syntaxique</strong>, tirée d'une courte phrase du texte. Durée max : <strong>2 minutes</strong>.<br>
-    Notions déjà vues en classe : <strong>interrogation</strong> et <strong>négation</strong>.
+    Notions déjà vues en classe : <strong>interrogation</strong>, <strong>négation</strong> et <strong>subordonnées relatives</strong>.
   </div>
   ${t.gr.map((q,i)=>`
   <div class="gram-card">
@@ -842,10 +859,126 @@ function htmlConseils(){
     </div>
   </div>`).join("")}`}
 
+function htmlRevision(){
+  const crItem=(key,titre,contenu)=>{
+    const open=S.crOpen[key];
+    return`<div style="background:#fff;border-radius:10px;border:1px solid ${open?"#E63946":"#e8e8e8"};overflow:hidden;margin-bottom:4px">
+      <div onclick="toggleCR('${key}')" style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onmouseenter="this.style.background='#fafafa'" onmouseleave="this.style.background='#fff'">
+        <div style="font-size:14px;font-weight:700;color:#0d0d0d">${titre}</div>
+        <div style="font-size:18px;color:#ccc;font-weight:300;transform:rotate(${open?90:0}deg)">›</div>
+      </div>
+      ${open?`<div style="padding:0 16px 16px;border-top:1px solid #f0f0f0"><div style="font-size:13px;color:#555;line-height:1.8;padding-top:12px">${contenu}</div></div>`:""}
+    </div>`;
+  };
+
+  const oral=`
+    <div style="background:#f5f5f3;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#666;line-height:1.7">
+      Le déroulement complet de l'oral est disponible sur la page d'accueil dans la cartouche <strong>« Déroulement de l'épreuve »</strong>. Les timers sont accessibles dans chaque texte, onglet <strong>Texte</strong>.
+    </div>
+    ${crItem("og","📐 La question de grammaire — fiche de révision",
+      `<div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#E63946;margin-bottom:10px">Méthode en 3 points (2 pts)</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
+        ${["<strong>1. Nommer</strong> — Identifiez la nature exacte de la proposition (ex : « Proposition subordonnée conjonctive »).","<strong>2. Démontrer</strong> — Citez le mot qui l'introduit (ex : « Introduite par la conjonction <em>bien que</em> »).","<strong>3. Expliquer</strong> — Donnez la relation logique ou la fonction (ex : « Elle exprime ici une concession »)."].map(t=>`<div style="background:#f5f5f3;border-radius:8px;padding:10px 14px;font-size:13px;color:#444;line-height:1.6">${t}</div>`).join("")}
+      </div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1A3C5C;margin-bottom:10px">I. La proposition subordonnée relative</div>
+      <div style="font-size:13px;color:#555;line-height:1.8;margin-bottom:6px">Introduite par un <strong>pronom relatif</strong> : <em>qui, que, quoi, dont, où, lequel</em>. Ce pronom établit une relation avec un nom placé juste avant : <strong>l'antécédent</strong>. Elle complète ce nom — elle joue le même rôle qu'un adjectif qualificatif.</div>
+      <div style="background:#f0f4ff;border-radius:8px;padding:10px 14px;font-size:13px;color:#444;line-height:1.6;margin-bottom:18px">📖 « C'est une bague <span style="color:#E63946;font-weight:700">que</span> m'avait donnée Camille. » (Musset, texte 11)<br><span style="color:#888">Pronom relatif : <em style="color:#E63946">que</em> · Antécédent : <em>bague</em></span></div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1A3C5C;margin-bottom:10px">II. Les subordonnées conjonctives & relations logiques</div>
+      <div style="font-size:13px;color:#555;line-height:1.7;margin-bottom:10px">Introduites par une <strong>conjonction de subordination</strong>. Elles expriment une circonstance liée à la proposition principale.</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:18px">
+        ${[
+          ["Concession","contradiction admise","Bien que, quoique (+ subjonctif)","« <span style='color:#E63946;font-weight:700'>Quand bien même</span> ce que je viens d'expliquer ne serait pas un obstacle, encore serait-il malaisé... » (La Boétie, texte 9)"],
+          ["Cause","l'origine","Parce que, puisque, comme","« <span style='color:#E63946;font-weight:700'>Parce que</span> les hommes naissent sous le joug, ils considèrent comme naturel l'état de leur naissance. » (La Boétie, texte 8)"],
+          ["Conséquence","le résultat","Si bien que, de sorte que","« Il était si troublé <span style='color:#E63946;font-weight:700'>si bien qu'</span>il ne pouvait plus parler. »"],
+          ["Condition","l'hypothèse","Si, au cas où, pourvu que","« <span style='color:#E63946;font-weight:700'>Si</span> ma cousine recule quand je lui tends la main, je vous dirai : Excusez-moi. » (Musset, texte 10)"],
+          ["But","l'objectif","Pour que, afin que (+ subjonctif)","« Perdican parle à haute voix <span style='color:#E63946;font-weight:700'>de manière que</span> Camille l'entende. » (Musset, texte 11)"],
+        ].map(([r,d,m,ex])=>`<div style="background:#f5f5f3;border-radius:8px;padding:10px 14px;font-size:13px;color:#444;line-height:1.6">
+          <strong>${r}</strong> <span style="color:#888">(${d})</span><br>
+          <span style="color:#1A3C5C;font-family:monospace;font-size:12px">${m}</span><br>
+          <span style="color:#666;font-style:italic;font-size:12px;display:block;margin-top:4px;border-top:1px solid #e8e8e8;padding-top:4px">📖 ${ex}</span>
+        </div>`).join("")}
+      </div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1A3C5C;margin-bottom:10px">III. La subordonnée conjonctive complétive</div>
+      <div style="font-size:13px;color:#555;line-height:1.8;margin-bottom:6px">Introduite par <strong><em>que</em></strong>. Elle complète un verbe — souvent comme COD. Elle ne peut être ni déplacée ni supprimée.</div>
+      <div style="background:#f0f4ff;border-radius:8px;padding:10px 14px;font-size:13px;color:#444;line-height:1.6">📖 Exemple : « Je crois <u>que Camille souffre</u>. »<br><span style="color:#888">Prop. subordonnée conjonctive complétive, introduite par <em>que</em>, COD de <em>crois</em></span></div>`
+    )}
+    ${crItem("o1","📖 Connaissez parfaitement votre texte","Auteur, œuvre, contexte historique et littéraire, problématique. Lisez-le et relisez-le. Sans notes, vous devez tout restituer de mémoire pendant les 30 minutes de préparation.")}
+    ${crItem("o2","🗂 Comprenez bien les mouvements","C'est-à-dire comment le texte s'articule, comment il progresse d'une idée à l'autre. Entraînez-vous à les délimiter à l'oral : « Le premier mouvement va du vers 1 au vers 4... »")}
+    ${crItem("o3","🎙 Soignez la lecture expressive","C'est 2 points relativement faciles si vous avez travaillé la mise en voix. Marquez les pauses, variez le rythme, adressez votre lecture à l'examinateur.")}
+    ${crItem("o4","🔤 Pour la question de grammaire","Restez calme. Identifiez la nature exacte, citez le mot qui introduit la proposition, donnez la relation logique. Appuyez-vous sur la phrase du texte.")}
+    ${crItem("o5","💬 Pour la présentation de l'œuvre","Parlez à la première personne, assumez vos goûts. Ce n'est plus une explication : c'est un échange personnel. L'examinateur veut vous entendre, pas réciter un cours.")}
+    ${crItem("o6","🌬 Respirez !","Comme en cours, l'oral est un exercice de présentation. Cette fois, c'est à vous de transmettre vos connaissances. Il n'y a pas de pièges.")}
+  `;
+
+  const procedes=[
+    {titre:"Métaphore",def:"Une image directe sans outil comparatif. Dans <em>La Peau de l'ours</em>, le zoo est « une cloche » qui emprisonne l'animal. <u>La métaphore fusionne deux réalités sans les comparer — elle dit plus fort qu'une comparaison.</u>"},
+    {titre:"Comparaison",def:"Un rapprochement entre deux éléments avec un outil (comme, tel, ainsi que...). <u>Rimbaud écrit : « Souriant comme sourirait un enfant malade » — le « comme » construit le pont entre le soldat et l'enfant.</u>"},
+    {titre:"Hyperbole",def:"Une exagération volontaire pour amplifier. <u>Dans <em>Manon Lescaut</em>, Des Grieux voit le projet du couvent comme « un coup mortel pour ses désirs » — il vient de rencontrer Manon depuis cinq minutes.</u>"},
+    {titre:"Antithèse",def:"Deux termes contraires mis en miroir. <u>Dans <em>Vieille chanson du jeune temps</em>, Hugo oppose sans cesse : lui froid / elle brillante ; lui sourd / elle chantée par les rossignols.</u>"},
+    {titre:"Oxymore",def:"Une antithèse en deux mots accolés qui se contredisent. <u>« Cette obscure clarté » (Corneille) ou « un silence éloquent » : deux mots logiquement opposés forment une image paradoxale et frappante.</u>"},
+    {titre:"Anaphore",def:"Répétition d'un mot ou groupe de mots en début de propositions. <u>Dans <em>La Peau de l'ours</em>, Sorman répète « on » : « on viendra m'admirer », « on m'étudiera » — effet d'écrasement et d'anonymat.</u>"},
+    {titre:"Accumulation / Énumération",def:"Suite de termes de même nature créant un effet de liste. <u>Sorman liste pendant 11 lignes tous les animaux du zoo — l'accumulation traduit la richesse de la nature réduite à un espace limité.</u>"},
+    {titre:"Périphrase",def:"Remplacer un mot par plusieurs qui le décrivent. <u>Dans <em>Manon Lescaut</em>, Des Grieux ne dit pas « Manon » mais « la maîtresse de mon cœur » — la périphrase révèle son état émotionnel.</u>"},
+  ];
+
+  const ecrit=`
+    ${crItem("e0","⏱ Le jour de l'épreuve — gestion du temps",
+      "<strong>Matériel :</strong> convocation, carte d'identité, stylos (pas à encre effaçable), montre non connectée, de quoi boire et manger.<br><br>"+
+      "<strong>4 heures :</strong> 10 min pour choisir le sujet · 2h de brouillon · 2h de rédaction au propre · 10 min de relecture finale.<br><br>"+
+      "<strong>Le sujet :</strong> en 1ère techno, vous avez le choix entre une contraction-essai ou un commentaire littéraire. Le commentaire a l'avantage de s'appuyer sur un texte support — pas besoin de connaître l'auteur, l'essentiel est de mobiliser les outils techniques."
+    )}
+    ${crItem("e1","📄 Étape 1 — Découvrir le texte",
+      "<strong>Exploitez le paratexte</strong> (ce qui entoure le texte) : l'objet d'étude encadré, les lignes d'introduction, la date et le titre de l'œuvre. Ils vous donnent déjà des pistes d'interprétation.<br><br>"+
+      "<strong>Première lecture émotionnelle :</strong> votre émotion est le meilleur point d'entrée. Rire → registre comique. Pitié → registre pathétique. Indignation → registre polémique. Mélancolie → registre lyrique.<br><br>"+
+      "<strong>Repérez les thèmes principaux</strong> en cherchant les champs lexicaux dominants. Définissez le « quoi » : c'est quoi ce texte ? Un poème d'amour mélancolique, une scène de manipulation théâtrale, un réquisitoire philosophique..."
+    )}
+    ${crItem("e2","🔍 Étape 2 — Questionner le texte (le COMMENT)",
+      "<strong>Grille 1 — La structure :</strong> paragraphes, longueur des phrases, ponctuation (exclamations, questions rhétoriques, énumérations). Pour le théâtre : qui parle, longueur des répliques, didascalies.<br><br>"+
+      "<strong>Grille 2 — Espace et temps :</strong> cadre, époque évoquée. Valeur des temps : imparfait = description/arrière-plan · passé simple = action de premier plan · présent de vérité générale = vrai pour toujours.<br><br>"+
+      "<strong>Grille 3 — L'énonciation :</strong> qui parle ? (je, tu, il). Présent d'énonciation (l'auteur parle directement). Modalités de phrase : exclamative (émotion), interrogative (questionnement), injonctive (ordre).<br><br>"+
+      "<strong>Grille 4 — Les procédés :</strong> figures de style, registres, champs lexicaux. Notez tout au brouillon avec numéro de ligne. <em>Chaque observation doit être prouvée par une citation.</em>"
+    )}
+    ${crItem("e3","✏️ Étape 3 — Construire le plan",
+      "<strong>2 axes de lecture</strong> (pas 3 en techno — préférez 2 axes bien développés à 3 axes superficiels).<br><br>"+
+      "<strong>La problématique :</strong> une question littéraire qui englobe tout le texte. Elle répond à « comment ce texte fonctionne-t-il ? » — pas à « de quoi parle-t-il ? »<br><br>"+
+      "<strong>Chaque axe = une idée + des sous-parties</strong> illustrées par des citations et des procédés nommés. Évitez à tout prix la paraphrase — raconter ce qu'on lit n'est pas analyser."
+    )}
+    ${crItem("e4","📝 Étape 4 — Rédiger",
+      "<strong>Introduction :</strong> présentation de l'auteur et de l'œuvre · situation de l'extrait · annonce de la problématique · annonce du plan en 2 axes.<br><br>"+
+      "<strong>Développement :</strong> chaque sous-partie = citation + nom du procédé + interprétation (effet produit). Reliez toujours au sens général du texte.<br><br>"+
+      "<strong>Conclusion :</strong> réponse directe à la problématique en 2-3 phrases · éventuellement une ouverture vers un autre texte du programme ou une œuvre connue.<br><br>"+
+      "<strong>Relecture finale :</strong> orthographe, cohérence des temps, ponctuation des citations."
+    )}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#E63946;margin:20px 0 10px">Procédés littéraires à connaître</div>
+    ${procedes.map((p,i)=>crItem("p"+i,p.titre,p.def)).join("")}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1A3C5C;margin:20px 0 10px">Procédés d'écriture</div>
+    ${crItem("r1","L'énonciation","<u>L'énonciation, c'est la situation de communication dans le texte : qui parle, à qui, dans quel contexte.</u> Repérez la personne grammaticale (je = auteur qui s'implique / il = distance), le temps du discours, et les marques d'adresse au lecteur.")}
+    ${crItem("r2","Les temps du récit","L'<u>imparfait</u> peint le décor et les actions de fond. Le <u>passé simple</u> fait avancer l'action (rupture, événement). Le <u>présent de narration</u> donne un effet de direct et d'urgence. Le <u>présent de vérité générale</u> formule une loi universelle.")}
+    ${crItem("r3","La ponctuation","Le <u>point d'exclamation</u> exprime une émotion forte (joie, colère, indignation). Le <u>point d'interrogation</u> peut être une vraie question ou une question rhétorique (réponse attendue). Les <u>points de suspension</u> suggèrent un non-dit, une hésitation ou une émotion qui déborde.")}
+    ${crItem("r4","Les registres littéraires","<u>Le registre, c'est la tonalité dominante du texte — l'effet global qu'il produit sur le lecteur.</u> Lyrique (émotion personnelle) · Tragique (fatalité, mort) · Comique (rire) · Pathétique (pitié, larmes) · Polémique (attaque, indignation) · Épique (grandeur, héroïsme).")}
+    ${crItem("r5","Les modalités de phrase","<u>La modalité, c'est le type de phrase selon l'intention de celui qui parle.</u> Exclamative (émotion) · Interrogative (question réelle ou rhétorique) · Injonctive / Impérative (ordre, conseil) · Déclarative (constat, affirmation). Chaque modalité révèle l'état d'esprit du personnage ou de l'auteur.")}
+  `;
+
+  return`<div class="detail-wrap">
+  <div class="detail-header">
+    <button class="retour-btn" onclick="retour()">← Retour</button>
+    <div class="detail-titre">Conseils de révision</div>
+  </div>
+  <div style="display:flex;gap:4px;margin-bottom:20px;background:#f0f0f0;border-radius:10px;padding:4px">
+    <button onclick="setCRVue('oral')" style="flex:1;border:none;border-radius:7px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;background:${S.crVue==='oral'?'#fff':'transparent'};color:${S.crVue==='oral'?'#0d0d0d':'#888'};box-shadow:${S.crVue==='oral'?'0 1px 4px rgba(0,0,0,0.1)':'none'}">🎤 L'oral</button>
+    <button onclick="setCRVue('ecrit')" style="flex:1;border:none;border-radius:7px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;background:${S.crVue==='ecrit'?'#fff':'transparent'};color:${S.crVue==='ecrit'?'#0d0d0d':'#888'};box-shadow:${S.crVue==='ecrit'?'0 1px 4px rgba(0,0,0,0.1)':'none'}">✍️ Le commentaire</button>
+  </div>
+  ${S.crVue==='oral'?oral:ecrit}
+</div>`}
+
 // ─── RENDER ─────────────────────────────────────────────────
 function render(scrollTop){
   const pos=scrollTop!==undefined?scrollTop:null;
-  document.getElementById("app").innerHTML=S.vue==="accueil"?htmlAccueil():htmlDetail();
+  let html;
+  if(S.vue==="accueil") html=htmlAccueil();
+  else if(S.vue==="revision") html=htmlRevision();
+  else html=htmlDetail();
+  document.getElementById("app").innerHTML=html;
   // Widget flottant
   let fw=document.getElementById("float-widget");
   if(!fw){
@@ -877,6 +1010,9 @@ function render(scrollTop){
 }
 
 // ─── ACTIONS ────────────────────────────────────────────────
+function ouvrirRevision(){S={...S,vue:"revision",crVue:"oral",crOpen:{}};render()}
+function setCRVue(v){const p=window.scrollY;S.crVue=v;S.crOpen={};render(0)}
+function toggleCR(key){const p=window.scrollY;const wasOpen=S.crOpen[key];S.crOpen={};if(!wasOpen)S.crOpen[key]=true;render(p)}
 function ouvrirTexte(id){stopAll();S={vue:"detail",id,ong:"texte",mouv:null,gq:null,eq:null,t1:720,t1act:false,t1iv:null,t2:480,t2act:false,t2iv:null,derOpen:S.derOpen};render()}
 function retour(){stopAll();S={...S,vue:"accueil"};render()}
 function setOng(o){S={...S,ong:o,gq:null,eq:null};render()}
